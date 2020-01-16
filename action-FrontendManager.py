@@ -135,7 +135,7 @@ def handle_locate_object(hermes, intent_message, session_id):
     elif slot_value == "unknownword":
         handle_bad_object(hermes, session_id)
     else:
-        send_frontend_request(slot_value)
+        send_frontend_request(hermes, session_id, slot_value)
 
 
 def handle_confirm_object(hermes, intent_message, session_id):
@@ -161,7 +161,7 @@ def handle_give_object(hermes, intent_message, session_id):
     elif slot_value == "unknownword":
         handle_bad_object(hermes, session_id)
     else:
-        send_frontend_request(slot_value)
+        send_frontend_request(hermes, session_id, slot_value)
 
 
 def extract_slot_info(intent_message):
