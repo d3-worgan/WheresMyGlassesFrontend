@@ -125,7 +125,7 @@ def handle_user_input(hermes, intent_message):
 def handle_locate_object(hermes, intent_message, session_id):
 
     # Extract the object name and confidence
-    slot_value, slot_score = extract_slot_info(intent_message)
+    slot_value, slot_score = extract_slot_info(intent_message.slots.home_object)
 
     # Validate the slot info
     if not slot_value:
@@ -140,7 +140,7 @@ def handle_locate_object(hermes, intent_message, session_id):
 
 def handle_confirm_object(hermes, intent_message, session_id):
     # Extract the object name and confidence
-    slot_value, slot_score = extract_slot_info(intent_message)
+    slot_value, slot_score = extract_slot_info(intent_message.slots.yesno)
 
     if not slot_value:
         handle_bad_intent(hermes, intent_message, session_id)
@@ -152,7 +152,7 @@ def handle_confirm_object(hermes, intent_message, session_id):
 
 def handle_give_object(hermes, intent_message, session_id):
     # Extract the object name and confidence
-    slot_value, slot_score = extract_slot_info(intent_message)
+    slot_value, slot_score = extract_slot_info(intent_message.slots.item)
 
     print("Extracted slot")
 
@@ -166,15 +166,15 @@ def handle_give_object(hermes, intent_message, session_id):
         send_frontend_request(hermes, session_id, slot_value)
 
 
-def extract_slot_info(intent_message):
+def extract_slot_info(slot):
     # Extract the object name and confidence
-    if intent_message.slots.home_object:
+    if slot:
         print("Extracting slot info")
-        slot_value = intent_message.slots.home_object.first().value
+        slot_value = slot.first().value
         slot_score = 0
         print("Slot value " + slot_value)
-        for slot in intent_message.slots.home_object:
-            slot_score = slot.confidence_score
+        for slots in slot:
+            slot_score = slots.confidence_score
         print("Slot score ", str(slot_score))
         return slot_value, slot_score
     else:
