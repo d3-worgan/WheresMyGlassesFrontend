@@ -16,7 +16,7 @@ git push
 
 # Login to pi and delete the old skills
 Write-Host "[out] Deleting old skill from Pi..."
-$Command = "sudo rm -r /var/lib/snips/skills/snips-skill-wheres-my-glasses/"
+$Command = "sudo rm -r /var/lib/snips/skills/WheresMyGlassesFrontend/"
 Invoke-SSHCommand -Index $sessionid.sessionid -Command $Command # Invoke Command Over SSH
 
 # Download the new action code with Sam
@@ -25,7 +25,7 @@ sam install actions
 
 # Login to pi and change permissions
 Write-Host "[out] Setting new action code permissions..."
-$Command = "sudo chmod +x /var/lib/snips/skills/snips-skill-wheres-my-glasses/action-wheresMyGlasses.py"
+$Command = "sudo chmod +x /var/lib/snips/skills/WheresMyGlassesFrontend/action-FrontendManager.py"
 Invoke-SSHCommand -Index $sessionid.sessionid -Command $Command # Invoke Command Over SSH
 
 # Reinstall actions
