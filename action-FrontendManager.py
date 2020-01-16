@@ -154,6 +154,8 @@ def handle_give_object(hermes, intent_message, session_id):
     # Extract the object name and confidence
     slot_value, slot_score = extract_slot_info(intent_message)
 
+    print("Extracted slot")
+
     if not slot_value:
         handle_bad_intent(hermes, intent_message, session_id)
     elif slot_score < 0.80:
@@ -177,6 +179,7 @@ def extract_slot_info(intent_message):
         return slot_value, slot_score
     else:
         print("No slot to extract")
+        return None, None
 
 
 def send_frontend_request(hermes, session_id, object_name):
