@@ -131,7 +131,7 @@ def handle_locate_object(hermes, intent_message, session_id):
     if not slot_value:
         handle_no_object(hermes, session_id)
     elif slot_score < 0.80:
-        handle_poor_object(hermes, session_id, slot_score)
+        handle_poor_object(hermes, session_id, slot_value)
     elif slot_value == "unknownword":
         handle_bad_object(hermes, session_id)
     else:
@@ -183,8 +183,8 @@ def send_frontend_request(hermes, session_id, object_name):
     if object_name:
         global pClient
         pClient.publish("voice_assistant/user_requests", object_name)
-        object_name += MessageBuilder.search_object(object_name)
-        hermes.publish_end_session(session_id, object_name)
+        message = MessageBuilder.search_object(object_name)
+        hermes.publish_end_session(session_id, message)
     else:
         hermes.publish_end_session(session_id, "Error")
 

@@ -35,11 +35,6 @@ class MessageBuilder:
         Construct a message to handle communcation code 3
         :return: A string describing the time and location of the object in a previous snapshot
         """
-        # m = self.minutes_passed(br.timestamp)
-        # print(m)
-        # if m < 60:
-        #     message = "I seen a %s by a %s, at %s minutes ago" % (br.locations_identified[0].object, br.locations_identified[0].location, m)
-        # else:
         message = "I seen a %s by a %s, at %s" % (br.locations_identified[0].object, br.locations_identified[0].location, br.location_time)
         print(message)
         return message
@@ -94,7 +89,7 @@ class MessageBuilder:
 
     @staticmethod
     def poor_object(name):
-        message = "Did you want to look for %s? please ask again" % (name)
+        message = "Did you want to look for %s?" % (name)
         return message
 
     @staticmethod
