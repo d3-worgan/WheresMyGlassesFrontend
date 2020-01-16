@@ -167,6 +167,7 @@ def handle_give_object(hermes, intent_message, session_id):
 def extract_slot_info(intent_message):
     # Extract the object name and confidence
     if intent_message.slots.home_object:
+        print("Extracting slot info")
         slot_value = intent_message.slots.home_object.first().value
         slot_score = 0
         print("Slot value " + slot_value)
