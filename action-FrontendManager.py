@@ -18,6 +18,10 @@ sent_request = False
 be_response = None
 message_builder = MessageBuilder()
 
+validate_object = None
+
+
+
 def on_log(client, userdata, level, buf):
     """
     Use for debugging paho client
@@ -95,71 +99,124 @@ def on_message(client, userdata, msg):
     pClient.publish('hermes/tts/say', tts)
 
 
-def intent_received(hermes, intent_message):
-    """
-    Manages communication from the user
-    """
+def handle_user_input(hermes, intent_message):
+
     # Extract intent information
     session_id = intent_message.session_id
     intent_name = intent_message.intent.intent_name
     intent_confidence = intent_message.intent.confidence_score
-    slot_value = None
-    slot_score = None
 
     print("Session ID " + str(session_id))
     print("Intent name " + intent_name)
     print("intent confidence " + str(intent_confidence))
 
-    search_object = True
+    if intent_confidence < 0.80:
+        handle_poor_intent(hermes, intent_message, session_id)
+    elif intent_name == "code-pig:LocateObject":
+        handle_locate_object(hermes, intent_message, session_id)
+    elif intent_name == "code-pig:ConfirmObject":
+        handle_confirm_object(hermes, intent_message, session_id)
+    elif intent_name == "code-pig:GiveObject":
+        handle_give_object(hermes, intent_message, session_id)
+    else:
+        handle_bad_intent(hermes, intent_message, session_id)
 
-    sentence = ''
 
-    # Validate intent confidence
-    if search_object:
-        if intent_confidence < 0.80:
-            sentence += MessageBuilder.poor_intent()
-            search_object = False
-
-    # Validate correct intent
-    if search_object:
-        if intent_name != 'code-pig:LocateObject':
-            sentence += MessageBuilder.bad_intent()
-
-    # Validate an object was given
-    if search_object:
-        if not intent_message.slots.home_object:
-            sentence += MessageBuilder.no_object()
-            search_object = False
+def handle_locate_object(hermes, intent_message, session_id):
 
     # Extract the object name and confidence
-    if search_object:
-        if intent_message.slots.home_object.first().value is not None:
-            slot_value = intent_message.slots.home_object.first().value
-            slot_score = 0
-            print("Slot value " + slot_value)
-            for slot in intent_message.slots.home_object:
-                slot_score = slot.confidence_score
-            print("Slot score ", str(slot_score))
+    slot_value, slot_score = extract_slot_info(intent_message)
 
-    # Validate heard the object correctly
-    if search_object:
-        if slot_score < 0.80:
-            sentence += MessageBuilder.poor_object(slot_value)
-            search_object = False
-
-    # Handle unknown objects
-    if search_object:
-        if slot_value == "unknownword":
-            sentence += MessageBuilder.bad_object()
-
-    # Send request to backend
-    if search_object:
-        global pClient
-        pClient.publish("voice_assistant/user_requests", slot_value)
-        sentence += MessageBuilder.search_object(slot_value)
-        hermes.publish_end_session(session_id, sentence)
+    # Validate the slot info
+    if not slot_value:
+        handle_no_object(hermes, session_id)
+    elif slot_score < 0.80:
+        handle_poor_object(hermes, session_id, slot_score)
+    elif slot_value == "unknownword":
+        handle_bad_object(hermes, session_id)
     else:
-        hermes.publish_end_session(session_id, sentence)
+        send_frontend_request(slot_value)
+
+
+def handle_confirm_object(hermes, intent_message, session_id):
+    # Extract the object name and confidence
+    slot_value, slot_score = extract_slot_info(intent_message)
+
+    if not slot_value:
+        handle_bad_intent(hermes, intent_message, session_id)
+    elif slot_value == "yes":
+        send_frontend_request(hermes, intent_message, validate_object)
+    elif slot_value == "no":
+        handle_negative_confirmation(hermes, session_id)
+
+
+def handle_give_object(hermes, intent_message, session_id):
+    # Extract the object name and confidence
+    slot_value, slot_score = extract_slot_info(intent_message)
+
+    if not slot_value:
+        handle_bad_intent(hermes, intent_message, session_id)
+    elif slot_score < 0.80:
+        handle_poor_object(hermes, session_id, slot_value)
+    elif slot_value == "unknownword":
+        handle_bad_object(hermes, session_id)
+    else:
+        send_frontend_request(slot_value)
+
+
+def extract_slot_info(intent_message):
+    # Extract the object name and confidence
+    if intent_message.slots.home_object.first().value is not None:
+        slot_value = intent_message.slots.home_object.first().value
+        slot_score = 0
+        print("Slot value " + slot_value)
+        for slot in intent_message.slots.home_object:
+            slot_score = slot.confidence_score
+        print("Slot score ", str(slot_score))
+        return slot_value, slot_score
+    else:
+        print("No slot to extract")
+
+
+def send_frontend_request(hermes, session_id, object_name):
+    # Send request to backend
+    if object_name:
+        global pClient
+        pClient.publish("voice_assistant/user_requests", object_name)
+        object_name += MessageBuilder.search_object(object_name)
+        hermes.publish_end_session(session_id, object_name)
+    else:
+        hermes.publish_end_session(session_id, "Error")
+
+
+def handle_poor_intent(hermes, intent_message, session_id):
+    sentence = MessageBuilder.poor_intent()
+    hermes.publish_end_session(session_id, sentence)
+
+
+def handle_bad_intent(hermes, intent_message, session_id):
+    message = MessageBuilder.bad_intent()
+    hermes.publish_end_session(session_id, message)
+
+
+def handle_no_object(hermes, session_id):
+    sentence = MessageBuilder.no_object()
+    hermes.publish_end_session(session_id, sentence)
+
+
+def handle_poor_object(hermes, session_id, object_name):
+    sentence = MessageBuilder.poor_object(object_name)
+    hermes.publish_continue_session(session_id, sentence, ["code-pig:ConfirmObject"])
+
+
+def handle_bad_object(hermes, session_id):
+    sentence = MessageBuilder.bad_object()
+    hermes.publish_end_session(session_id, sentence)
+
+
+def handle_negative_confirmation(hermes, session_id):
+    sentence = "what object did you want to look for?"
+    hermes.publish_continue_session(session_id, sentence, ["code-pig:GiveObject"])
 
 
 def wait_for_response(hermes, session_id):
@@ -194,5 +251,5 @@ if __name__ == "__main__":
 
     print("Loading hermes")
     with Hermes(MQTT_ADDR) as h:
-        h.subscribe_intents(intent_received).start()
+        h.subscribe_intents(handle_user_input).start()
         print("Subscribed to intents")
