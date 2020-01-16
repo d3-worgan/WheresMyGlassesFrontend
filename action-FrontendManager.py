@@ -219,7 +219,7 @@ def handle_bad_object(hermes, session_id):
 
 
 def handle_negative_confirmation(hermes, session_id):
-    sentence = "what object did you want to look for?"
+    sentence = MessageBuilder.what_object()
     hermes.publish_continue_session(session_id, sentence, ["code-pig:GiveObject"])
 
 

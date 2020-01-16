@@ -32,7 +32,7 @@ class MessageBuilder:
     @staticmethod
     def single_location_previous_snapshot(br):
         """
-        Construct a message to handle communcation code 3
+        Construct a message to handle communication code 3
         :return: A string describing the time and location of the object in a previous snapshot
         """
         message = "I seen a %s by a %s, at %s" % (br.locations_identified[0].object, br.locations_identified[0].location, br.location_time)
@@ -55,7 +55,7 @@ class MessageBuilder:
     @staticmethod
     def not_found(br):
         """
-        Construct a message to handle communcation 5
+        Construct a message to handle communication 5
         :return: A string informing that the specified object was not found
         """
         message = "I have not seen a %s, maybe I can help with something else" % (br.original_request)
@@ -65,7 +65,7 @@ class MessageBuilder:
     @staticmethod
     def unknown_object(br):
         """
-        Construct a message to handle commincation code 6
+        Construct a message to handle communication code 6
         :return: A string explaining that the specified object is not in the list of recognised objects
         """
         message = "I've never heard of %s before, but maybe I can help you find something else" % (br.original_request)
@@ -105,4 +105,9 @@ class MessageBuilder:
     @staticmethod
     def search_object(name):
         message = "lets have a look for a %s " % (name)
+        return message
+
+    @staticmethod
+    def what_object():
+        message = "okay. what did you want to look for"
         return message
