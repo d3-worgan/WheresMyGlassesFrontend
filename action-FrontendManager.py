@@ -46,7 +46,7 @@ def on_disconnect(client, userdata, flags, rc=0):
     print("Disconnected result code " + str(rc))
 
 
-def on_message(client, userdata, msg):
+def handle_backend_response(client, userdata, msg):
     """
     Paho client (pClient) main callback function, Handles messages from the backend 
     using the paho mqtt client. Listen for messages on the seeker/processed_requests topics
@@ -205,7 +205,7 @@ def handle_bad_intent(hermes, intent_message, session_id):
 
 def handle_no_object(hermes, session_id):
     sentence = MessageBuilder.no_object()
-    hermes.publish_end_session(session_id, sentence)
+    hermes.publish_end_session(session_id, sentence, ["code-pig:GiveObject"])
 
 
 def handle_poor_object(hermes, session_id, object_name):
@@ -246,7 +246,7 @@ if __name__ == "__main__":
     pClient.on_connect = on_connect
     pClient.on_log = on_log
     pClient.on_disconnect = on_disconnect
-    pClient.on_message = on_message
+    pClient.on_message = handle_backend_response
     pClient.connect(broker)
     pClient.loop_start()
     pClient.subscribe("seeker/processed_requests")

@@ -68,28 +68,28 @@ class MessageBuilder:
         Construct a message to handle commincation code 6
         :return: A string explaining that the specified object is not in the list of recognised objects
         """
-        message = "I've never heard of a %s before, but maybe I can help you find something else" % (br.original_request)
+        message = "I've never heard of %s before, but maybe I can help you find something else" % (br.original_request)
         print(message)
         return message
 
     @staticmethod
     def poor_intent():
-        message = "I dont think I heard that correctly, please ask again"
+        message = "I do not think I heard that correctly, please ask again"
         return message
 
     @staticmethod
     def bad_intent():
-        message = "I dont understand what you are asking, I might be able to help you find somehting"
+        message = "I did not understand that, I might be able to help you find something"
         return message
 
     @staticmethod
     def no_object():
-        message = "I did not hear the object you were looking for, please ask again"
+        message = "sorry. did you say you want to search for something. please tell me what you want to search for"
         return message
 
     @staticmethod
     def poor_object(name):
-        message = "Did you want to look for %s?" % (name)
+        message = "Sorry. I did not hear that properly. did you want to look for %s" % (name)
         return message
 
     @staticmethod
