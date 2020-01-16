@@ -14,6 +14,7 @@ MQTT_ADDR = "{}:{}".format(MQTT_IP_ADDR, str(MQTT_PORT))
 broker = "192.168.0.27"
 
 response_received = False
+sent_request = False
 be_response = None
 message_builder = MessageBuilder()
 
