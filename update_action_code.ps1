@@ -1,5 +1,5 @@
 # Pi details
-$Password = "raspberry"
+$Password = "RASPBERRY"
 $User = "pi"
 $ComputerName = "192.168.0.27"
 
