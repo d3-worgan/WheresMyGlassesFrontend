@@ -11,7 +11,7 @@ import time
 MQTT_IP_ADDR = "localhost"
 MQTT_PORT = 1883
 MQTT_ADDR = "{}:{}".format(MQTT_IP_ADDR, str(MQTT_PORT))
-#broker = "192.168.1.2" # changed broker address
+broker = "192.168.0.27" # changed broker address
 
 response_received = False
 sent_request = False
@@ -247,7 +247,7 @@ if __name__ == "__main__":
     pClient.on_log = on_log
     pClient.on_disconnect = on_disconnect
     pClient.on_message = handle_backend_response
-    pClient.connect(MQTT_IP_ADDR)
+    pClient.connect(broker)
     pClient.loop_start()
     pClient.subscribe("seeker/processed_requests")
     pClient.subscribe("hermes/nlu/intentNotRecognized")
