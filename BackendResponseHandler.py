@@ -64,6 +64,7 @@ class BackendResponseHandler:
             elif backend_response.code_name == '3':
                 print("Received code 3, identified single location in previous snapshot")
                 msg = MessageBuilder.single_location_previous_snapshot(backend_response)
+                print(msg)
             elif backend_response.code_name == '4':
                 print("Received code 4, identified multiple locations in previous snapshot")
                 msg = MessageBuilder.multiple_location_previous_snapshot(backend_response)

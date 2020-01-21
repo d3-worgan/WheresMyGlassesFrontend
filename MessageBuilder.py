@@ -51,7 +51,7 @@ class MessageBuilder:
                                                       br.location_time)
         else:
             return None
-            
+
     @staticmethod
     def multiple_location_previous_snapshot(br):
         """
