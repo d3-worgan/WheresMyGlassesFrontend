@@ -42,7 +42,7 @@ class MessageBuilder:
 
         if float(br.location_time_passed) <= 60.0:
             print("Less than sixty")
-            return "I seen it"
+            return "I seen a %s" % br.locations_identified[0].object
             # return "I seen a %s by a %s %s minutes ago" % (br.locations_identified[0].object,
             #                                                br.locations_identified[0].location,
             #                                                br.location_time_time_passed)
