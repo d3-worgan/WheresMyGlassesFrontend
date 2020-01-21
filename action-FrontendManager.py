@@ -74,9 +74,8 @@ def handle_backend_response(client, userdata, msg):
         backend_response = BackendResponse(message['code_name'],
                                            message['original_request'],
                                            message['location_time'],
-                                           message['location_time_passed'],
-                                           message['locations_identified']
-                                           )
+                                           message['minutes_passed'],
+                                           message['locations_identified'])
         print("Backend response loaded")
         backend_response.print()
 
