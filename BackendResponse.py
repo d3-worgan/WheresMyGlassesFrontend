@@ -11,10 +11,11 @@ class BackendResponse:
     can then unpack the recieved message back into a BackendResponse object so that it can
     be processed.
     """
-    def __init__(self, code_name, original_request, location_time, locations_identified):
+    def __init__(self, code_name, original_request, location_time, location_time_passed, locations_identified):
         self.code_name = code_name
         self.original_request = original_request
         self.location_time = location_time
+        self.location_time_passed = location_time_passed
         self.locations_identified = []
         if locations_identified:
             for loc in locations_identified:
@@ -41,5 +42,6 @@ class BackendResponse:
     def print(self):
         print("Code name: ", self.code_name)
         print("Location_time: ", self.location_time)
+        print("Minutes passed: ", self.location_time_passed)
         for loc in self.locations_identified:
             print(loc.object + " " + loc.location)

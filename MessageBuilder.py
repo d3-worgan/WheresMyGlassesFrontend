@@ -5,7 +5,7 @@ class MessageBuilder:
     Class containing a number of output messages that can be sent to the text to speech engine
     """
     def __init__(self):
-        print("Verbalising a message")
+        print("Loading message builder...")
 
     @staticmethod
     def single_location_current_snapshot(br):
@@ -35,7 +35,10 @@ class MessageBuilder:
         Construct a message to handle communication code 3
         :return: A string describing the time and location of the object in a previous snapshot
         """
-        message = "I seen a %s by a %s, at %s" % (br.locations_identified[0].object, br.locations_identified[0].location, br.location_time)
+        if br.location_time_passed > 60:
+            message = "I seen a %s by a %s, at %s" % (br.locations_identified[0].object, br.locations_identified[0].location, br.location_time)
+        else:
+            message = "I seen a %s by a %s %s minutes ago" % (br.locations_identified[0].object, br.locations_identified[0].location, br.location_time_time_passed)
         print(message)
         return message
 
@@ -48,7 +51,10 @@ class MessageBuilder:
         message = "I seen a %s by a %s " % (br.locations_identified[0].object, br.locations_identified[0].location)
         for location in br.locations_identified[1:]:
             message += "and one by a %s." % (location.location)
-        message += "at %s" % (br.location_time)
+        if br.location_time_passed > 60:
+            message += "at %s" % (br.location_time)
+        else:
+            message += "%s minutes ago" % (br.location_time_passed)
         print(message)
         return message
 

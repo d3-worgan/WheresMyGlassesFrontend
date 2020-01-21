@@ -71,7 +71,12 @@ def handle_backend_response(client, userdata, msg):
         print("Loaded message from json")
         print(message)
         print("Loading response into response object")
-        backend_response = BackendResponse(message['code_name'], message['original_request'], message['location_time'], message['locations_identified'])
+        backend_response = BackendResponse(message['code_name'],
+                                           message['original_request'],
+                                           message['location_time'],
+                                           message['location_time_passed'],
+                                           message['locations_identified']
+                                           )
         print("Backend response loaded")
         backend_response.print()
 
@@ -80,7 +85,7 @@ def handle_backend_response(client, userdata, msg):
             print("Received code 1, located single object in current snapshot")
             msg = message_builder.single_location_current_snapshot(backend_response)
         elif backend_response.code_name == '2':
-            print("Recieved code 2, identified multiple locations in current snapshot")
+            print("Received code 2, identified multiple locations in current snapshot")
             msg = message_builder.multiple_location_current_snapshot(backend_response)
         elif backend_response.code_name == '3':
             print("Received code 3, identified single location in previous snapshot")
