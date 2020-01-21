@@ -65,9 +65,12 @@ def handle_backend_response(client, userdata, msg):
     global message_builder
     msg = ""
 
-    if topic == "hermes/nlu/intentNotRecognized":
+    if topic == "hermes/dialogueManager/sessionEnded":
         print("Handle intent not recognised")
         tts = "{\"siteId\": \"default\", \"text\": \"i dont understand that. please ask again\", \"lang\": \"en_GB\"}"
+    if topic == "hermes/dialogueManager/endSession":
+        print("Handle topic session ended")
+        print(m_decode)
     elif topic == "seeker/processed_requests":
         print("Handle message from backend.")
         message = json.loads(m_decode)
