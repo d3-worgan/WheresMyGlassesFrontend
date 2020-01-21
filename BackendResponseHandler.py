@@ -57,23 +57,23 @@ class BackendResponseHandler:
             print("Checking message code.")
             if backend_response.code_name == '1':
                 print("Received code 1, located single object in current snapshot")
-                msg = MessageBuilder.single_location_current_snapshot(backend_response)
+                msg += MessageBuilder.single_location_current_snapshot(backend_response)
             elif backend_response.code_name == '2':
                 print("Received code 2, identified multiple locations in current snapshot")
-                msg = MessageBuilder.multiple_location_current_snapshot(backend_response)
+                msg += MessageBuilder.multiple_location_current_snapshot(backend_response)
             elif backend_response.code_name == '3':
                 print("Received code 3, identified single location in previous snapshot")
-                msg = MessageBuilder.single_location_previous_snapshot(backend_response)
+                msg += MessageBuilder.single_location_previous_snapshot(backend_response)
                 print(msg)
             elif backend_response.code_name == '4':
                 print("Received code 4, identified multiple locations in previous snapshot")
-                msg = MessageBuilder.multiple_location_previous_snapshot(backend_response)
+                msg += MessageBuilder.multiple_location_previous_snapshot(backend_response)
             elif backend_response.code_name == '5':
                 print("Received code 5, could not locate the object")
-                msg = MessageBuilder.not_found(backend_response)
+                msg += MessageBuilder.not_found(backend_response)
             elif backend_response.code_name == '6':
                 print("Received code 6, the system does not recognise that object")
-                msg = MessageBuilder.unknown_object(backend_response)
+                msg += MessageBuilder.unknown_object(backend_response)
                 print(msg)
 
         tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (msg)
