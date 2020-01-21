@@ -37,10 +37,9 @@ class MessageBuilder:
         """
         print("Single location previous snapshot")
 
-        if float(br.location_time_passed) > 60.0:
-            print("Less than sixty")
+        if float(br.location_time_passed) <= 60.0:
             return "I seen a %s by a %s %s minutes ago" % (br.locations_identified[0].object, br.locations_identified[0].location, br.location_time_passed)
-        elif float(br.location_time_passed) <= 60.0:
+        elif float(br.location_time_passed) > 60.0:
             return "I seen a %s by a %s, at %s" % (br.locations_identified[0].object, br.locations_identified[0].location, br.location_time[11:16])
 
     @staticmethod
@@ -53,9 +52,9 @@ class MessageBuilder:
         for location in br.locations_identified[1:]:
             message += "and another by a %s." % (location.location)
 
-        if float(br.location_time_passed) > 60.0:
+        if float(br.location_time_passed) <= 60.0:
             message += " That was %s minutes ago" % (br.location_time_passed)
-        elif float(br.location_time_passed) <= 60.0:
+        elif float(br.location_time_passed) > 60.0:
             message += " That was at %s" % (br.location_time[11:16])
 
         print(message)
