@@ -2,6 +2,7 @@ from BackendResponse import BackendResponse
 import paho.mqtt.client as mqtt
 import json
 import time
+from MessageBuilder import MessageBuilder
 
 class BackendResponseHandler:
 
@@ -28,10 +29,9 @@ class BackendResponseHandler:
         """
         topic = msg.topic
         m_decode = str(msg.payload.decode("utf-8", "ignore"))
-        print("Topics recieved ", topic)
-        print("Message recieved: ", m_decode)
+        print("Topics received ", topic)
+        print("Message received: ", m_decode)
 
-        global message_builder
         msg = ""
 
         if topic == "hermes/dialogueManager/sessionEnded":
@@ -41,7 +41,7 @@ class BackendResponseHandler:
             print("Handle topic session ended")
             print(m_decode)
         elif topic == "seeker/processed_requests":
-            print("Handle message from backend.")
+            print("Handling backend response...")
             message = json.loads(m_decode)
             print("Loaded message from json")
             print(message)
@@ -57,22 +57,22 @@ class BackendResponseHandler:
             print("Checking message code.")
             if backend_response.code_name == '1':
                 print("Received code 1, located single object in current snapshot")
-                msg = message_builder.single_location_current_snapshot(backend_response)
+                msg = MessageBuilder.single_location_current_snapshot(backend_response)
             elif backend_response.code_name == '2':
                 print("Received code 2, identified multiple locations in current snapshot")
-                msg = message_builder.multiple_location_current_snapshot(backend_response)
+                msg = MessageBuilder.multiple_location_current_snapshot(backend_response)
             elif backend_response.code_name == '3':
                 print("Received code 3, identified single location in previous snapshot")
-                msg = message_builder.single_location_previous_snapshot(backend_response)
+                msg = MessageBuilder.single_location_previous_snapshot(backend_response)
             elif backend_response.code_name == '4':
                 print("Received code 4, identified multiple locations in previous snapshot")
-                msg = message_builder.multiple_location_previous_snapshot(backend_response)
+                msg = MessageBuilder.multiple_location_previous_snapshot(backend_response)
             elif backend_response.code_name == '5':
                 print("Received code 5, could not locate the object")
-                msg = message_builder.not_found(backend_response)
+                msg = MessageBuilder.not_found(backend_response)
             elif backend_response.code_name == '6':
                 print("Received code 6, the system does not recognise that object")
-                msg = message_builder.unknown_object(backend_response)
+                msg = MessageBuilder.unknown_object(backend_response)
                 print(msg)
 
         tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (msg)
