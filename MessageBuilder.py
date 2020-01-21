@@ -36,19 +36,12 @@ class MessageBuilder:
         :return: A string describing the time and location of the object in a previous snapshot
         """
         print("Single location previous snapshot")
-        print(br.location_time_passed)
-        print(br.locations_identified[0].object)
-        print(br.locations_identified[0].location)
 
         if float(br.location_time_passed) > 60.0:
             print("Less than sixty")
             return "I seen a %s by a %s %s minutes ago" % (br.locations_identified[0].object, br.locations_identified[0].location, br.location_time_passed)
         elif float(br.location_time_passed) <= 60.0:
-            return "I seen a %s by a %s, at %s" % (br.locations_identified[0].object,
-                                                   br.locations_identified[0].location,
-                                                   br.location_time[11:18])
-        else:
-            return None
+            return "I seen a %s by a %s, at %s" % (br.locations_identified[0].object, br.locations_identified[0].location, br.location_time[11:16])
 
     @staticmethod
     def multiple_location_previous_snapshot(br):
@@ -56,13 +49,15 @@ class MessageBuilder:
         Construct a message to handle communication code 4
         :return: A string describing the time and locations of an object in a previous snapshot 
         """
-        message = "I seen a %s by a %s " % (br.locations_identified[0].object, br.locations_identified[0].location)
+        message = "I seen a %s in %s locations. There is one by a %s.." % (br.locations_identified[0].object, str(len(br.locations_identified)), br.locations_identified[0].location)
         for location in br.locations_identified[1:]:
-            message += "and one by a %s." % (location.location)
+            message += "and another by a %s." % (location.location)
+
         if float(br.location_time_passed) > 60.0:
-            message += "at %s" % (br.location_time)
-        else:
-            message += "%s minutes ago" % (br.location_time_passed)
+            message += " That was %s minutes ago" % (br.location_time_passed)
+        elif float(br.location_time_passed) <= 60.0:
+            message += " That was at %s" % (br.location_time[11:16])
+
         print(message)
         return message
 
