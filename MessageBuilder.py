@@ -38,9 +38,9 @@ class MessageBuilder:
         print("Single location previous snapshot")
 
         if float(br.location_time_passed) <= 60.0:
-            return "I seen a %s by a %s %s minutes ago" % (br.locations_identified[0].object, br.locations_identified[0].location, br.location_time_passed)
+            return "I seen a %s by a %s. That was %s minutes ago" % (br.locations_identified[0].object, br.locations_identified[0].location, round(br.location_time_passed, 1))
         elif float(br.location_time_passed) > 60.0:
-            return "I seen a %s by a %s, at %s" % (br.locations_identified[0].object, br.locations_identified[0].location, br.location_time[11:16])
+            return "I seen a %s by a %s. That was at %s" % (br.locations_identified[0].object, br.locations_identified[0].location, br.location_time[11:16])
 
     @staticmethod
     def multiple_location_previous_snapshot(br):
