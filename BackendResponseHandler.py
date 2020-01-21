@@ -1,5 +1,5 @@
 from BackendResponse import BackendResponse
-import paho as mqtt
+import paho.mqtt.client as mqtt
 import json
 import time
 
