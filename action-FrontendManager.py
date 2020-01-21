@@ -8,6 +8,7 @@ from MessageBuilder import MessageBuilder
 import json
 import time
 from UserInputHandler import UserInputHandler
+from BackendResponseHandler import BackendResponseHandler
 
 MQTT_IP_ADDR = "192.168.0.27"
 MQTT_PORT = 1883
@@ -126,21 +127,22 @@ def handle_backend_response(client, userdata, msg):
 
 if __name__ == "__main__":
 
-    print("Loading paho client")
-    print("Action code broker address: " + broker)
-    pClient = mqtt.Client("Frontend")
-    pClient.on_connect = on_connect
-    pClient.on_log = on_log
-    pClient.on_disconnect = on_disconnect
-    pClient.on_message = handle_backend_response
-    pClient.connect(broker)
-    pClient.loop_start()
-    pClient.subscribe("seeker/processed_requests")
-    pClient.subscribe("hermes/nlu/intentNotRecognized")
-    print("Subscribed to backend")
+    # print("Loading paho client")
+    # print("Action code broker address: " + broker)
+    # pClient = mqtt.Client("Frontend")
+    # pClient.on_connect = on_connect
+    # pClient.on_log = on_log
+    # pClient.on_disconnect = on_disconnect
+    # pClient.on_message = handle_backend_response
+    # pClient.connect(broker)
+    # pClient.loop_start()
+    # pClient.subscribe("seeker/processed_requests")
+    # pClient.subscribe("hermes/nlu/intentNotRecognized")
+    # print("Subscribed to backend")
 
-    print("Loading hermes")
+    backend_response_handler = BackendResponseHandler(broker)
     user_input_handler = UserInputHandler(pClient)
+    
     with Hermes(MQTT_ADDR) as h:
         h.subscribe_intents(user_input_handler.handle_user_input).start()
         print("Subscribed to intents")
