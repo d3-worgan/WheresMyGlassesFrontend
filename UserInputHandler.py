@@ -90,8 +90,8 @@ class UserInputHandler:
     def send_frontend_request(self, hermes, session_id, object_name):
         # Send request to backend
         if object_name:
-            global pClient
-            pClient.publish("voice_assistant/user_requests", object_name)
+            # global pClient
+            # pClient.publish("voice_assistant/user_requests", object_name)
             message = MessageBuilder.search_object(object_name)
             hermes.publish_end_session(session_id, message)
         else:
