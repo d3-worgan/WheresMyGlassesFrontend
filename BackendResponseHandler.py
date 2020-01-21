@@ -73,6 +73,7 @@ class BackendResponseHandler:
             elif backend_response.code_name == '6':
                 print("Received code 6, the system does not recognise that object")
                 msg = message_builder.unknown_object(backend_response)
+                print(msg)
 
         tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (msg)
         print("Publishing message to TTS: ", msg)
