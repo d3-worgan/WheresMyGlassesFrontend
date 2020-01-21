@@ -8,7 +8,7 @@ from MessageBuilder import MessageBuilder
 import json
 import time
 
-MQTT_IP_ADDR = "192.168.1.2"
+MQTT_IP_ADDR = "192.168.0.27"
 MQTT_PORT = 1883
 MQTT_ADDR = "{}:{}".format(MQTT_IP_ADDR, str(MQTT_PORT))
 broker = "192.168.0.27"
