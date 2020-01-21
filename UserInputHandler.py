@@ -6,10 +6,10 @@ class UserInputHandler:
 
     def __init__(self, pclient, intent_threshold=0.7, slot_threshold=0.7, ):
         print("Initialising User Input Handler")
-        self.pclient = pclient
-        self.intent_threshold = intent_threshold
+        self.pclient = pclient  # Connection the backend handler
+        self.intent_threshold = intent_threshold  # For checking confidence in user input
         self.slot_threshold = slot_threshold
-        self.validate_object = False
+        self.validate_object = None  # Stores the name of the object the system needs to validate
 
     def handle_user_input(self, hermes, intent_message):
 
@@ -22,8 +22,9 @@ class UserInputHandler:
         print("Intent name " + intent_name)
         print("intent confidence " + str(intent_confidence))
 
+        # Validate and handle incoming intents
         if intent_confidence < self.intent_threshold:
-            self.handle_poor_intent(hermes, intent_message, session_id)
+            self.handle_poor_intent(hermes, intent_message)
         elif intent_name == "code-pig:LocateObject":
             self.handle_locate_object(hermes, intent_message, session_id)
         elif intent_name == "code-pig:ConfirmObject":
@@ -31,7 +32,7 @@ class UserInputHandler:
         elif intent_name == "code-pig:GiveObject":
             self.handle_give_object(hermes, intent_message, session_id)
         else:
-            self.handle_bad_intent(hermes, intent_message, session_id)
+            self.handle_bad_intent(hermes, intent_message)
 
     def handle_locate_object(self, hermes, intent_message, session_id):
 
@@ -53,7 +54,7 @@ class UserInputHandler:
         slot_value, slot_score = self.extract_slot_info(intent_message.slots.yesno)
 
         if not slot_value:
-            self.handle_bad_intent(hermes, intent_message, session_id)
+            self.handle_bad_intent(hermes, intent_message)
         elif slot_value == "yes":
             self.send_frontend_request(hermes, intent_message, self.validate_object)
         elif slot_value == "no":
@@ -66,7 +67,7 @@ class UserInputHandler:
         print("Extracted slot")
 
         if not slot_value:
-            self.handle_bad_intent(hermes, intent_message, session_id)
+            self.handle_bad_intent(hermes, intent_message)
         elif slot_score < self.slot_threshold:
             self.handle_poor_object(hermes, session_id, slot_value)
         elif slot_value == "unknownword":
@@ -112,6 +113,7 @@ class UserInputHandler:
 
     def handle_poor_object(self, hermes, session_id, object_name):
         sentence = MessageBuilder.poor_object(object_name)
+        self.validate_object = object_name
         hermes.publish_continue_session(session_id, sentence, ["code-pig:ConfirmObject"])
 
     def handle_bad_object(self, hermes, session_id):
