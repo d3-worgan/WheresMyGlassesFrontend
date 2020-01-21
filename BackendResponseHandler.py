@@ -75,6 +75,7 @@ class BackendResponseHandler:
                 msg = message_builder.unknown_object(backend_response)
 
         tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (msg)
+        print("Publishing message to TTS: ", msg)
         self.pClient.publish('hermes/tts/say', tts)
 
     def wait_for_response(self, session_id):

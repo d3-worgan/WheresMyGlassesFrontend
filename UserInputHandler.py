@@ -5,6 +5,7 @@ import time
 class UserInputHandler:
 
     def __init__(self, pclient, intent_threshold=0.7, slot_threshold=0.7, ):
+        print("Initialising User Input Handler")
         self.pclient = pclient
         self.intent_threshold = intent_threshold
         self.slot_threshold = slot_threshold
