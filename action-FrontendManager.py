@@ -141,7 +141,7 @@ if __name__ == "__main__":
     # print("Subscribed to backend")
 
     backend_response_handler = BackendResponseHandler(broker)
-    user_input_handler = UserInputHandler(pClient)
+    user_input_handler = UserInputHandler(backend_response_handler.pClient)
 
     with Hermes(MQTT_ADDR) as h:
         h.subscribe_intents(user_input_handler.handle_user_input).start()
