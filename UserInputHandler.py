@@ -4,7 +4,8 @@ import time
 
 class UserInputHandler:
 
-    def __init__(self, intent_threshold=0.7, slot_threshold=0.7):
+    def __init__(self, pclient, intent_threshold=0.7, slot_threshold=0.7, ):
+        self.pclient = pclient
         self.intent_threshold = intent_threshold
         self.slot_threshold = slot_threshold
         self.validate_object = False
@@ -90,8 +91,7 @@ class UserInputHandler:
     def send_frontend_request(self, hermes, session_id, object_name):
         # Send request to backend
         if object_name:
-            # global pClient
-            # pClient.publish("voice_assistant/user_requests", object_name)
+            self.pClient.publish("voice_assistant/user_requests", object_name)
             message = MessageBuilder.search_object(object_name)
             hermes.publish_end_session(session_id, message)
         else:

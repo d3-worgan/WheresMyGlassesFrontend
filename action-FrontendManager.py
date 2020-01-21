@@ -140,7 +140,7 @@ if __name__ == "__main__":
     print("Subscribed to backend")
 
     print("Loading hermes")
-    user_input_handler = UserInputHandler()
+    user_input_handler = UserInputHandler(pClient)
     with Hermes(MQTT_ADDR) as h:
         h.subscribe_intents(user_input_handler.handle_user_input).start()
         print("Subscribed to intents")
