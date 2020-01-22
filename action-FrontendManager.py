@@ -19,7 +19,7 @@ validate_object = None
 if __name__ == "__main__":
 
     # Launch the backend handler to communicate between the backend and the user interface
-    backend_response_handler = BackendResponseHandler(MQTT_ADDR)
+    backend_response_handler = BackendResponseHandler(MQTT_IP_ADDR)
 
     # Launch the user interface (Snips)
     user_input_handler = UserInputHandler(backend_response_handler.pClient, intent_threshold, slot_threshold)
