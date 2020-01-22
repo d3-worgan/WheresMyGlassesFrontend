@@ -76,7 +76,7 @@ class MessageBuilder:
         Construct a message to handle communication code 6
         :return: A string explaining that the specified object is not in the list of recognised objects
         """
-        message = "I've never heard of %s before, but maybe I can help you find something else" % (br.original_request)
+        message = "I am not trained to search for %s, but maybe I can help you find something else" % (br.original_request)
         print(message)
         return message
 
