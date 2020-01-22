@@ -76,18 +76,18 @@ class MessageBuilder:
         Construct a message to handle communication code 6
         :return: A string explaining that the specified object is not in the list of recognised objects
         """
-        message = "I am not trained to search for %s, but maybe I can help you find something else" % (br.original_request)
+        message = "i am not trained to search for %s, but maybe I can help you find something else" % (br.original_request)
         print(message)
         return message
 
     @staticmethod
     def poor_intent():
-        message = "I do not think I heard that correctly, please ask again"
+        message = "i do not think I heard that correctly, please ask again"
         return message
 
     @staticmethod
     def bad_intent():
-        message = "I did not understand that, I might be able to help you find something"
+        message = "i did not understand that, i might be able to help you find something"
         return message
 
     @staticmethod
@@ -97,17 +97,17 @@ class MessageBuilder:
 
     @staticmethod
     def poor_object(name):
-        message = "Sorry. I did not hear that properly. did you want to look for %s" % (name)
+        message = "sorry. i did not hear that properly. did you want to look for %s" % (name)
         return message
 
     @staticmethod
     def bad_object():
-        message = "I do not think I can help with the object, please ask again"
+        message = "i do not think I can help with the object, please ask again"
         return message
 
     @staticmethod
     def system_error():
-        message = "There is a problem with the system."
+        message = "there is a problem with the system."
         return message
 
     @staticmethod
