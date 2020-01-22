@@ -112,7 +112,8 @@ class MessageBuilder:
 
     @staticmethod
     def search_object(name):
-        message = "lets have a look for a %s " % (name)
+        message = "okay."
+        #message = "lets have a look for a %s " % (name)
         return message
 
     @staticmethod
