@@ -13,7 +13,10 @@ class MessageBuilder:
         Construct a message to handle communication code 1
         :return: A string describing the location of an object in the current snapshot
         """
-        message = "I just seen a %s by a %s" % (br.locations_identified[0].object, br.locations_identified[0].location)
+        if br.original_request[-1] == "s":
+            message = "I just seen some %s by a %s" % (br.locations_identified[0].object, br.locations_identified[0].location)
+        else:
+            message = "I just seen a %s by a %s" % (br.locations_identified[0].object, br.locations_identified[0].location)
         print(message)
         return message
 
@@ -23,9 +26,15 @@ class MessageBuilder:
         Contruct a message to handle communication code 2
         :return: A string describing the locations of the the object in the current snapshot
         """
-        message = "I can see a %s in %s locations. There is one by a %s.." % (br.locations_identified[0].object, str(len(br.locations_identified)), br.locations_identified[0].location)
-        for location in br.locations_identified[1:]:
-            message += "and another by a %s.." % (location.location)
+        message = ""
+        if br.original_request[-1] == "s":
+            message += "I can see some %s in %s locations. There is one by a %s.." % (br.locations_identified[0].object, str(len(br.locations_identified)), br.locations_identified[0].location)
+            for location in br.locations_identified[1:]:
+                message += "and some more by a %s.." % (location.location)
+        else:
+            message = "I can see a %s in %s locations. There is one by a %s.." % (br.locations_identified[0].object, str(len(br.locations_identified)), br.locations_identified[0].location)
+            for location in br.locations_identified[1:]:
+                message += "and another by a %s.." % (location.location)
         print(message)
         return message
 
@@ -36,11 +45,18 @@ class MessageBuilder:
         :return: A string describing the time and location of the object in a previous snapshot
         """
         print("Single location previous snapshot")
+        message = ""
+        if br.original_request[-1] == "s":
+            message += "I seen some %s by a %s." % (br.locations_identified[0].object, br.locations_identified[0].location)
+        else:
+            message += "I seen a %s by a %s." % (br.locations_identified[0].object, br.locations_identified[0].location)
 
         if float(br.location_time_passed) <= 60.0:
-            return "I seen a %s by a %s. That was %s minutes ago" % (br.locations_identified[0].object, br.locations_identified[0].location, round(float(br.location_time_passed), 0))
+            message += "That was %s minutes ago" % (round(float(br.location_time_passed), 0))
         elif float(br.location_time_passed) > 60.0:
-            return "I seen a %s by a %s. That was at %s" % (br.locations_identified[0].object, br.locations_identified[0].location, br.location_time[11:16])
+            message += "That was at %s" % (br.location_time[11:16])
+
+        return message
 
     @staticmethod
     def multiple_location_previous_snapshot(br):
@@ -48,9 +64,14 @@ class MessageBuilder:
         Construct a message to handle communication code 4
         :return: A string describing the time and locations of an object in a previous snapshot 
         """
-        message = "I seen a %s in %s locations. There is one by a %s.." % (br.locations_identified[0].object, str(len(br.locations_identified)), br.locations_identified[0].location)
-        for location in br.locations_identified[1:]:
-            message += "and another by a %s." % (location.location)
+        if br.original_request[-1] == "s":
+            message = "I seen some %s in %s locations. There is some by a %s.." % (br.locations_identified[0].object, str(len(br.locations_identified)), br.locations_identified[0].location)
+            for location in br.locations_identified[1:]:
+                message += "and some more by a %s." % (location.location)
+        else:
+            message = "I seen a %s in %s locations. There is one by a %s.." % (br.locations_identified[0].object, str(len(br.locations_identified)), br.locations_identified[0].location)
+            for location in br.locations_identified[1:]:
+                message += "and another by a %s." % (location.location)
 
         if float(br.location_time_passed) <= 60.0:
             message += " That was %s minutes ago" % (round(float(br.location_time_passed), 0))
@@ -66,7 +87,10 @@ class MessageBuilder:
         Construct a message to handle communication 5
         :return: A string informing that the specified object was not found
         """
-        message = "I have not seen a %s, maybe I can help with something else" % (br.original_request)
+        if br.original_request[-1] == "s":
+            message = "I have not seen any %s, maybe I can help with something else" % (br.original_request)
+        else:
+            message = "I have not seen a %s, maybe I can help with something else" % (br.original_request)
         print(message)
         return message
 
@@ -112,8 +136,11 @@ class MessageBuilder:
 
     @staticmethod
     def search_object(name):
-        message = "lets see."
-        #message = "lets have a look for a %s " % (name)
+        #message = "lets see."
+        if name[-1] == "s":
+            message = "lets have a look for some %s " % (name)
+        else:
+            message = "lets have a look for a %s " % (name)
         return message
 
     @staticmethod
