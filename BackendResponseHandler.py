@@ -64,6 +64,7 @@ class BackendResponseHandler:
                 msg = "i am checking if i seen the object earlier"
                 tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (msg)
                 self.pClient.publish('hermes/tts/say', tts)
+                time.sleep(2)
             if wait > 10:
                 print("The location request timed out")
                 msg = "The cctv did not respond. maybe try ask me again"
