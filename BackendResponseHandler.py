@@ -22,6 +22,7 @@ class BackendResponseHandler:
         print("Subscribed to backend")
 
         self.waiting = False
+        self.wait_for_response()
 
     def handle_message_received(self, client, userdata, msg):
         """
@@ -49,7 +50,7 @@ class BackendResponseHandler:
         print("Handle frontend request")
         self.pClient.publish('backend_handler/frontend_request', m_decode)
         self.waiting = True
-        self.wait_for_response()
+        #self.wait_for_response()
 
     def wait_for_response(self):
         """
@@ -59,17 +60,20 @@ class BackendResponseHandler:
         :return:
         """
         wait = 0
-        while self.waiting:
-            if wait > 10:
-                print("The location request timed out")
-                msg = "The cameras did not respond. maybe try ask me again"
-                tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (msg)
-                self.pClient.publish('hermes/tts/say', tts)
-                break
-            else:
-                print("Waiting for backend response")
-                time.sleep(1)
-                wait += 1
+        while True:
+            if self.waiting:
+                while self.waiting:
+                    if wait > 10:
+                        print("The location request timed out")
+                        msg = "The cameras did not respond. maybe try ask me again"
+                        tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (msg)
+                        self.pClient.publish('hermes/tts/say', tts)
+                        self.waiting = False
+                        break
+                    else:
+                        print("Waiting for backend response")
+                        time.sleep(1)
+                        wait += 1
 
     def handle_backend_response(self, m_decode):
         """
