@@ -65,11 +65,11 @@ class MessageBuilder:
         :return: A string describing the time and locations of an object in a previous snapshot 
         """
         if br.original_request[-1] == "s":
-            message = "I seen some %s in %s locations. There is some by a %s.." % (br.locations_identified[0].object, str(len(br.locations_identified)), br.locations_identified[0].location)
+            message = "I seen some %s in %s locations. There was some by a %s.." % (br.locations_identified[0].object, str(len(br.locations_identified)), br.locations_identified[0].location)
             for location in br.locations_identified[1:]:
                 message += "and some more by a %s." % (location.location)
         else:
-            message = "I seen a %s in %s locations. There is one by a %s.." % (br.locations_identified[0].object, str(len(br.locations_identified)), br.locations_identified[0].location)
+            message = "I seen a %s in %s locations. There was one by a %s.." % (br.locations_identified[0].object, str(len(br.locations_identified)), br.locations_identified[0].location)
             for location in br.locations_identified[1:]:
                 message += "and another by a %s." % (location.location)
 

@@ -10,6 +10,7 @@ class UserInputHandler:
         self.intent_threshold = intent_threshold  # For checking confidence in user input
         self.slot_threshold = slot_threshold
         self.validate_object = None  # Stores the name of the object the system needs to validate
+        self.waiting_for_response = False
 
     def handle_user_input(self, hermes, intent_message):
 
@@ -93,7 +94,8 @@ class UserInputHandler:
     def send_frontend_request(self, hermes, session_id, object_name):
         # Send request to backend
         if object_name:
-            self.pclient.publish("voice_assistant/user_requests", object_name)
+            self.pclient.publish("frontend/frontend_request", object_name)
+            self.waiting_for_response = True
             message = MessageBuilder.search_object(object_name)
             hermes.publish_end_session(session_id, message)
         else:

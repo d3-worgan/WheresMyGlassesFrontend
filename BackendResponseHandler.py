@@ -13,80 +13,59 @@ class BackendResponseHandler:
         self.pClient.on_connect = self.on_connect
         self.pClient.on_log = self.on_log
         self.pClient.on_disconnect = self.on_disconnect
-        self.pClient.on_message = self.handle_backend_response
+        self.pClient.on_message = self.handle_message_received
         self.pClient.connect(broker)
         self.pClient.loop_start()
         self.pClient.subscribe("seeker/processed_requests")
         self.pClient.subscribe("hermes/nlu/intentNotRecognized")
         print("Subscribed to backend")
 
-    def handle_backend_response(self, client, userdata, msg):
+        self.waiting = False
+
+    def handle_message_received(self, client, userdata, msg):
         """
-        Paho client (pClient) main callback function, Handles messages from the backend
-        using the paho mqtt client. Listen for messages on the seeker/processed_requests topics
-        and use the information to provide an output to the user
-        :return: Publish a message to the text to speech engine for the user
+        Process incoming messages from the frontend and backend
         """
         topic = msg.topic
         m_decode = str(msg.payload.decode("utf-8", "ignore"))
         print("Topics received ", topic)
         print("Message received: ", m_decode)
 
-        msg = ""
-
         if topic == "hermes/dialogueManager/sessionEnded":
-            print("Handle intent not recognised")
-            tts = "{\"siteId\": \"default\", \"text\": \"i dont understand that. please ask again\", \"lang\": \"en_GB\"}"
-        if topic == "hermes/dialogueManager/endSession":
-            print("Handle topic session ended")
-            print(m_decode)
-        elif topic == "seeker/processed_requests":
+            pass
+        elif topic == "frontend/frontend_request":
+            self.handle_frontend_request(m_decode)
+        elif topic == "backend/backend_response":
             print("Handling backend response...")
-            message = json.loads(m_decode)
-            print("Loaded message from json")
-            print(message)
-            print("Loading response into response object")
-            backend_response = BackendResponse(message['code_name'],
-                                               message['original_request'],
-                                               message['location_time'],
-                                               message['minutes_passed'],
-                                               message['locations_identified'])
-            print("Backend response loaded")
-            backend_response.print()
+            self.handle_backend_response(m_decode)
 
-            print("Checking message code.")
-            if backend_response.code_name == '1':
-                print("Received code 1, located single object in current snapshot")
-                msg += MessageBuilder.single_location_current_snapshot(backend_response)
-            elif backend_response.code_name == '2':
-                print("Received code 2, identified multiple locations in current snapshot")
-                msg += MessageBuilder.multiple_location_current_snapshot(backend_response)
-            elif backend_response.code_name == '3':
-                print("Received code 3, identified single location in previous snapshot")
-                msg += MessageBuilder.single_location_previous_snapshot(backend_response)
-                print(msg)
-            elif backend_response.code_name == '4':
-                print("Received code 4, identified multiple locations in previous snapshot")
-                msg += MessageBuilder.multiple_location_previous_snapshot(backend_response)
-            elif backend_response.code_name == '5':
-                print("Received code 5, could not locate the object")
-                msg += MessageBuilder.not_found(backend_response)
-            elif backend_response.code_name == '6':
-                print("Received code 6, the system does not recognise that object")
-                msg += MessageBuilder.unknown_object(backend_response)
-                print(msg)
+    def handle_frontend_request(self, m_decode):
+        """
+        Pass on the frontend's request and start waiting for a response.
+        :param m_decode:
+        :return:
+        """
+        print("Handle frontend request")
+        self.pClient.publish('backend_handler/frontend_request', m_decode)
+        self.waiting = True
+        self.wait_for_response()
 
-        tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (msg)
-        print("Publishing message to TTS: ", msg)
-        self.pClient.publish('hermes/tts/say', tts)
-
-    def wait_for_response(self, session_id):
-        global response_received
+    def wait_for_response(self):
+        """
+        Wait for the backend to respond with an answer to the frontend request. If no
+        answer in 3 seconds, keep the user informed. If no answer in 10 seconds, then
+        tell the user there is a problem and stop waiting.
+        :return:
+        """
         wait = 0
-        while not response_received:
+        while self.waiting:
+            if wait == 3:
+                msg = "i am checking if i seen the object earlier"
+                tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (msg)
+                self.pClient.publish('hermes/tts/say', tts)
             if wait > 10:
                 print("The location request timed out")
-                msg = "The system is not working, try again later"
+                msg = "The cctv did not respond. maybe try ask me again"
                 tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (msg)
                 self.pClient.publish('hermes/tts/say', tts)
                 break
@@ -94,6 +73,53 @@ class BackendResponseHandler:
                 print("Waiting for backend response")
                 time.sleep(1)
                 wait += 1
+
+    def handle_backend_response(self, m_decode):
+        """
+        Decode the backend response and extract the information. Rebuild the response
+        and send the corresponding output message to the frontend TTS engine.
+        :param m_decode:
+        :return:
+        """
+        self.waiting = False
+        out_msg = ""
+        message = json.loads(m_decode)
+        print("Loaded message from json")
+        print(message)
+        print("Loading response into response object")
+        backend_response = BackendResponse(message['code_name'],
+                                           message['original_request'],
+                                           message['location_time'],
+                                           message['minutes_passed'],
+                                           message['locations_identified'])
+        print("Backend response loaded")
+        backend_response.print()
+
+        print("Checking message code.")
+        if backend_response.code_name == '1':
+            print("Received code 1, located single object in current snapshot")
+            out_msg += MessageBuilder.single_location_current_snapshot(backend_response)
+        elif backend_response.code_name == '2':
+            print("Received code 2, identified multiple locations in current snapshot")
+            out_msg += MessageBuilder.multiple_location_current_snapshot(backend_response)
+        elif backend_response.code_name == '3':
+            print("Received code 3, identified single location in previous snapshot")
+            out_msg += MessageBuilder.single_location_previous_snapshot(backend_response)
+            print(out_msg)
+        elif backend_response.code_name == '4':
+            print("Received code 4, identified multiple locations in previous snapshot")
+            out_msg += MessageBuilder.multiple_location_previous_snapshot(backend_response)
+        elif backend_response.code_name == '5':
+            print("Received code 5, could not locate the object")
+            out_msg += MessageBuilder.not_found(backend_response)
+        elif backend_response.code_name == '6':
+            print("Received code 6, the system does not recognise that object")
+            out_msg += MessageBuilder.unknown_object(backend_response)
+            print(out_msg)
+
+        tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (out_msg)
+        print("Publishing message to TTS: ", out_msg)
+        self.pClient.publish('hermes/tts/say', tts)
 
     def on_log(client, userdata, level, buf):
         """
