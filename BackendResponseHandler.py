@@ -16,8 +16,9 @@ class BackendResponseHandler:
         self.pClient.on_message = self.handle_message_received
         self.pClient.connect(broker)
         self.pClient.loop_start()
-        self.pClient.subscribe("seeker/processed_requests")
+        self.pClient.subscribe("backend/response")
         self.pClient.subscribe("hermes/nlu/intentNotRecognized")
+        self.pClient.subscribe("frontend/request")
         print("Subscribed to backend")
 
         self.waiting = False
@@ -33,9 +34,9 @@ class BackendResponseHandler:
 
         if topic == "hermes/dialogueManager/sessionEnded":
             pass
-        elif topic == "frontend/frontend_request":
+        elif topic == "frontend/request":
             self.handle_frontend_request(m_decode)
-        elif topic == "backend/backend_response":
+        elif topic == "backend/response":
             print("Handling backend response...")
             self.handle_backend_response(m_decode)
 

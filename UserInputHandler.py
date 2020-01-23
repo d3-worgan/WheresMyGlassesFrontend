@@ -94,8 +94,8 @@ class UserInputHandler:
     def send_frontend_request(self, hermes, session_id, object_name):
         # Send request to backend
         if object_name:
-            self.pclient.publish("frontend/frontend_request", object_name)
-            self.waiting_for_response = True
+            print("Sending message to controller")
+            self.pclient.publish("frontend/request", object_name)
             message = MessageBuilder.search_object(object_name)
             hermes.publish_end_session(session_id, message)
         else:
