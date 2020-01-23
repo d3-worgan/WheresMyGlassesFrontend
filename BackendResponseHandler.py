@@ -22,7 +22,7 @@ class BackendResponseHandler:
         print("Subscribed to backend")
 
         self.waiting = False
-        self.wait_for_response()
+        #self.wait_for_response()
 
     def handle_message_received(self, client, userdata, msg):
         """
@@ -49,7 +49,7 @@ class BackendResponseHandler:
         """
         print("Handle frontend request")
         self.pClient.publish('backend_handler/frontend_request', m_decode)
-        self.waiting = True
+        #self.waiting = True
         #self.wait_for_response()
 
     def wait_for_response(self):
@@ -82,7 +82,7 @@ class BackendResponseHandler:
         :param m_decode:
         :return:
         """
-        self.waiting = False
+        #self.waiting = False
         out_msg = ""
         message = json.loads(m_decode)
         print("Loaded message from json")
