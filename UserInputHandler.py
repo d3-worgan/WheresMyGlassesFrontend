@@ -111,7 +111,7 @@ class UserInputHandler:
 
     def handle_no_object(self, hermes, session_id):
         sentence = MessageBuilder.no_object()
-        hermes.publish_end_session(session_id, sentence, ["code-pig:GiveObject"])
+        hermes.publish_continue_session(session_id, sentence, ["code-pig:GiveObject"])
 
     def handle_poor_object(self, hermes, session_id, object_name):
         sentence = MessageBuilder.poor_object(object_name)
