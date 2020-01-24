@@ -21,6 +21,8 @@ class BackendResponseHandler:
         self.pClient.subscribe("frontend/request")
         print("Subscribed to backend")
 
+        self.cam = True  # Give information about which camera seen each object
+
         self.waiting = False
         #self.wait_for_response()
 
@@ -99,17 +101,17 @@ class BackendResponseHandler:
         print("Checking message code.")
         if backend_response.code_name == '1':
             print("Received code 1, located single object in current snapshot")
-            out_msg += MessageBuilder.single_location_current_snapshot(backend_response)
+            out_msg += MessageBuilder.single_location_current_snapshot(backend_response, self.cam)
         elif backend_response.code_name == '2':
             print("Received code 2, identified multiple locations in current snapshot")
-            out_msg += MessageBuilder.multiple_location_current_snapshot(backend_response)
+            out_msg += MessageBuilder.multiple_location_current_snapshot(backend_response, self.cam)
         elif backend_response.code_name == '3':
             print("Received code 3, identified single location in previous snapshot")
-            out_msg += MessageBuilder.single_location_previous_snapshot(backend_response)
+            out_msg += MessageBuilder.single_location_previous_snapshot(backend_response, self.cam)
             print(out_msg)
         elif backend_response.code_name == '4':
             print("Received code 4, identified multiple locations in previous snapshot")
-            out_msg += MessageBuilder.multiple_location_previous_snapshot(backend_response)
+            out_msg += MessageBuilder.multiple_location_previous_snapshot(backend_response, self.cam)
         elif backend_response.code_name == '5':
             print("Received code 5, could not locate the object")
             out_msg += MessageBuilder.not_found(backend_response)

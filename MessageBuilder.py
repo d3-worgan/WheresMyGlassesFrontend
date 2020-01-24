@@ -8,75 +8,146 @@ class MessageBuilder:
         print("Loading message builder...")
 
     @staticmethod
-    def single_location_current_snapshot(br):
+    def single_location_current_snapshot(br, cam):
         """
         Construct a message to handle communication code 1
         :return: A string describing the location of an object in the current snapshot
         """
-        if br.original_request[-1] == "s":
-            message = "I just seen some %s by a %s" % (br.locations_identified[0].object, br.locations_identified[0].location)
+        message = ""
+        if cam:
+            if br.original_request[-1] == "s":
+                message += "I just seen some %s by a %s in camera %s" % (br.locations_identified[0].object,
+                                                                         br.locations_identified[0].location,
+                                                                         br.locations_identified[0].camera_id)
+            else:
+                message += "I just seen a %s by a %s in camera %s" % (br.locations_identified[0].object,
+                                                                      br.locations_identified[0].location,
+                                                                      br.locations_identified[0].camera_id)
         else:
-            message = "I just seen a %s by a %s" % (br.locations_identified[0].object, br.locations_identified[0].location)
-        print(message)
+            if br.original_request[-1] == "s":
+                message += "I just seen some %s by a %s" % (br.locations_identified[0].object,
+                                                            br.locations_identified[0].location)
+            else:
+                message += "I just seen a %s by a %s" % (br.locations_identified[0].object,
+                                                         br.locations_identified[0].location)
+            print(message)
         return message
 
     @staticmethod
-    def multiple_location_current_snapshot(br):
+    def multiple_location_current_snapshot(br, cam):
         """
         Contruct a message to handle communication code 2
         :return: A string describing the locations of the the object in the current snapshot
         """
         message = ""
-        if br.original_request[-1] == "s":
-            message += "I can see some %s in %s locations. There is one by a %s.." % (br.locations_identified[0].object, str(len(br.locations_identified)), br.locations_identified[0].location)
-            for location in br.locations_identified[1:]:
-                message += "and some more by a %s.." % (location.location)
+
+        if cam:
+            if br.original_request[-1] == "s":
+                message += "I can see some %s in %s locations. There is one by a %s from camera %s" % (br.locations_identified[0].object,
+                                                                                                       str(len(br.locations_identified)),
+                                                                                                       br.locations_identified[0].location,
+                                                                                                       br.locations_identified[0].camera_id)
+                for location in br.locations_identified[1:]:
+                    message += "and some more by a %s in %s" % (location.location, location.camera_id)
+            else:
+                message += "I can see a %s in %s locations. There is one by a %s in %s" % (br.locations_identified[0].object,
+                                                                                           str(len(br.locations_identified)),
+                                                                                           br.locations_identified[0].location,
+                                                                                           br.locations_identified[0].camera_id)
+                for location in br.locations_identified[1:]:
+                    message += "and another by a %s in %s" % (location.location, location.camera_id)
         else:
-            message = "I can see a %s in %s locations. There is one by a %s.." % (br.locations_identified[0].object, str(len(br.locations_identified)), br.locations_identified[0].location)
-            for location in br.locations_identified[1:]:
-                message += "and another by a %s.." % (location.location)
+            if br.original_request[-1] == "s":
+                message += "I can see some %s in %s locations. There is one by a %s.." % (br.locations_identified[0].object,
+                                                                                          str(len(br.locations_identified)),
+                                                                                          br.locations_identified[0].location)
+                for location in br.locations_identified[1:]:
+                    message += "and some more by a %s.." % (location.location)
+            else:
+                message = "I can see a %s in %s locations. There is one by a %s.." % (br.locations_identified[0].object,
+                                                                                      str(len(br.locations_identified)),
+                                                                                      br.locations_identified[0].location)
+                for location in br.locations_identified[1:]:
+                    message += "and another by a %s.." % (location.location)
+
         print(message)
         return message
 
     @staticmethod
-    def single_location_previous_snapshot(br):
+    def single_location_previous_snapshot(br, cam):
         """
         Construct a message to handle communication code 3
         :return: A string describing the time and location of the object in a previous snapshot
         """
         print("Single location previous snapshot")
         message = ""
-        if br.original_request[-1] == "s":
-            message += "I seen some %s by a %s." % (br.locations_identified[0].object, br.locations_identified[0].location)
-        else:
-            message += "I seen a %s by a %s." % (br.locations_identified[0].object, br.locations_identified[0].location)
+        if cam:
+            if br.original_request[-1] == "s":
+                message += "I seen some %s by a %s in camera %s." % (br.locations_identified[0].object,
+                                                                     br.locations_identified[0].location,
+                                                                     br.locations_identified[0].camera_id)
+            else:
+                message += "I seen a %s by a %s in camera %s." % (br.locations_identified[0].object,
+                                                                  br.locations_identified[0].location,
+                                                                  br.locations_identified[0].camera_id)
 
-        if float(br.location_time_passed) <= 60.0:
-            message += "That was %s minutes ago" % (round(float(br.location_time_passed), 0))
-        elif float(br.location_time_passed) > 60.0:
-            message += "That was at %s" % (br.location_time[11:16])
+            if float(br.location_time_passed) <= 60.0:
+                message += "That was %s minutes ago" % (round(float(br.location_time_passed), 0))
+            elif float(br.location_time_passed) > 60.0:
+                message += "That was at %s" % (br.location_time[11:16])
+        else:
+            if br.original_request[-1] == "s":
+                message += "I seen some %s by a %s ." % (br.locations_identified[0].object, br.locations_identified[0].location)
+            else:
+                message += "I seen a %s by a %s ." % (br.locations_identified[0].object, br.locations_identified[0].location)
+
+            if float(br.location_time_passed) <= 60.0:
+                message += "That was %s minutes ago" % (round(float(br.location_time_passed), 0))
+            elif float(br.location_time_passed) > 60.0:
+                message += "That was at %s" % (br.location_time[11:16])
 
         return message
 
     @staticmethod
-    def multiple_location_previous_snapshot(br):
+    def multiple_location_previous_snapshot(br, cam):
         """
         Construct a message to handle communication code 4
         :return: A string describing the time and locations of an object in a previous snapshot 
         """
-        if br.original_request[-1] == "s":
-            message = "I seen some %s in %s locations. There was some by a %s.." % (br.locations_identified[0].object, str(len(br.locations_identified)), br.locations_identified[0].location)
-            for location in br.locations_identified[1:]:
-                message += "and some more by a %s." % (location.location)
-        else:
-            message = "I seen a %s in %s locations. There was one by a %s.." % (br.locations_identified[0].object, str(len(br.locations_identified)), br.locations_identified[0].location)
-            for location in br.locations_identified[1:]:
-                message += "and another by a %s." % (location.location)
 
-        if float(br.location_time_passed) <= 60.0:
-            message += " That was %s minutes ago" % (round(float(br.location_time_passed), 0))
-        elif float(br.location_time_passed) > 60.0:
-            message += " That was at %s" % (br.location_time[11:16])
+        if cam:
+            if br.original_request[-1] == "s":
+                message = "I seen some %s in %s locations. There was some by a %s in camera %s" % (br.locations_identified[0].object,
+                                                                                                   str(len(br.locations_identified)),
+                                                                                                   br.locations_identified[0].location,
+                                                                                                   br.locations_identified[0].camera_id)
+                for location in br.locations_identified[1:]:
+                    message += "and some more by a %s in camera %s" % (location.location, location.camera_id)
+            else:
+                message = "I seen a %s in %s locations. There was one by a %s.." % (
+                br.locations_identified[0].object, str(len(br.locations_identified)),
+                br.locations_identified[0].location)
+                for location in br.locations_identified[1:]:
+                    message += "and another by a %s." % (location.location)
+
+            if float(br.location_time_passed) <= 60.0:
+                message += " That was %s minutes ago" % (round(float(br.location_time_passed), 0))
+            elif float(br.location_time_passed) > 60.0:
+                message += " That was at %s" % (br.location_time[11:16])
+        else:
+            if br.original_request[-1] == "s":
+                message = "I seen some %s in %s locations. There was some by a %s.." % (br.locations_identified[0].object, str(len(br.locations_identified)), br.locations_identified[0].location)
+                for location in br.locations_identified[1:]:
+                    message += "and some more by a %s." % (location.location)
+            else:
+                message = "I seen a %s in %s locations. There was one by a %s.." % (br.locations_identified[0].object, str(len(br.locations_identified)), br.locations_identified[0].location)
+                for location in br.locations_identified[1:]:
+                    message += "and another by a %s." % (location.location)
+
+            if float(br.location_time_passed) <= 60.0:
+                message += " That was %s minutes ago" % (round(float(br.location_time_passed), 0))
+            elif float(br.location_time_passed) > 60.0:
+                message += " That was at %s" % (br.location_time[11:16])
 
         print(message)
         return message
