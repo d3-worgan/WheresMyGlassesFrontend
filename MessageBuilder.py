@@ -2,7 +2,11 @@ from BackendResponse import BackendResponse
 
 class MessageBuilder:
     """
-    Class containing a number of output messages that can be sent to the text to speech engine
+    Class containing a number of output messages that can be sent to the text to speech engine.
+    If the object name ends with an 's' then adjust response e.g. i seen some glasses, or i seem
+    a book. Also, can turn on/off whether to include information about which camera did the
+    location. I.e. the 'cam' parameter specifies whether to include camera information in the
+    message.
     """
     def __init__(self):
         print("Loading message builder...")
@@ -14,6 +18,8 @@ class MessageBuilder:
         :return: A string describing the location of an object in the current snapshot
         """
         message = ""
+
+        # Produce a message describing the location of an object using the camera_id info
         if cam:
             if br.original_request[-1] == "s":
                 message += "I just seen some %s by a %s in camera %s" % (br.locations_identified[0].object,
@@ -23,7 +29,9 @@ class MessageBuilder:
                 message += "I just seen a %s by a %s in camera %s" % (br.locations_identified[0].object,
                                                                       br.locations_identified[0].location,
                                                                       br.locations_identified[0].camera_id)
+        # Dont include camera id info
         else:
+            MessageBuilder.delete_double_locations(br)
             if br.original_request[-1] == "s":
                 message += "I just seen some %s by a %s" % (br.locations_identified[0].object,
                                                             br.locations_identified[0].location)
@@ -37,7 +45,7 @@ class MessageBuilder:
     def multiple_location_current_snapshot(br, cam):
         """
         Contruct a message to handle communication code 2
-        :return: A string describing the locations of the the object in the current snapshot
+        :return: A string describing the multiple locations of the the object in the current snapshot
         """
         message = ""
 
@@ -57,6 +65,7 @@ class MessageBuilder:
                 for location in br.locations_identified[1:]:
                     message += "and another by a %s in %s" % (location.location, location.camera_id)
         else:
+            MessageBuilder.delete_double_locations(br)
             if br.original_request[-1] == "s":
                 message += "I can see some %s in %s locations. There is one by a %s.." % (br.locations_identified[0].object,
                                                                                           str(len(br.locations_identified)),
@@ -83,11 +92,11 @@ class MessageBuilder:
         message = ""
         if cam:
             if br.original_request[-1] == "s":
-                message += "I seen some %s by a %s in camera %s." % (br.locations_identified[0].object,
+                message += "I seen some %s by a %s in camera %s ." % (br.locations_identified[0].object,
                                                                      br.locations_identified[0].location,
                                                                      br.locations_identified[0].camera_id)
             else:
-                message += "I seen a %s by a %s in camera %s." % (br.locations_identified[0].object,
+                message += "I seen a %s by a %s in camera %s ." % (br.locations_identified[0].object,
                                                                   br.locations_identified[0].location,
                                                                   br.locations_identified[0].camera_id)
 
@@ -96,6 +105,7 @@ class MessageBuilder:
             elif float(br.location_time_passed) > 60.0:
                 message += "That was at %s" % (br.location_time[11:16])
         else:
+            MessageBuilder.delete_double_locations(br)
             if br.original_request[-1] == "s":
                 message += "I seen some %s by a %s ." % (br.locations_identified[0].object, br.locations_identified[0].location)
             else:
@@ -135,6 +145,7 @@ class MessageBuilder:
             elif float(br.location_time_passed) > 60.0:
                 message += " That was at %s" % (br.location_time[11:16])
         else:
+            MessageBuilder.delete_double_locations(br)
             if br.original_request[-1] == "s":
                 message = "I seen some %s in %s locations. There was some by a %s.." % (br.locations_identified[0].object, str(len(br.locations_identified)), br.locations_identified[0].location)
                 for location in br.locations_identified[1:]:
@@ -218,3 +229,17 @@ class MessageBuilder:
     def what_object():
         message = "okay. what did you want to look for"
         return message
+
+    @staticmethod
+    def delete_double_locations(br):
+        """
+        Search through the list of located objects and delete doubles. Use to stop speaking the
+        same information over and over.
+        :param br:
+        :return:
+        """
+        for location1 in br.locations_identified:
+            for location2 in br.locations_identified:
+                if location1 != location2:
+                    if location1.object == location2.object and location1.location == location2.location:
+                        br.locations_identified.remove(location2)
