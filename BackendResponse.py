@@ -21,7 +21,7 @@ class BackendResponse:
             for loc in locations_identified:
                 x = json.loads(loc)
                 print(x)
-                lo = LocatedObject(x['object'], x['location'])
+                lo = LocatedObject(x['camera_id'], x['object'], x['location'])
                 self.locations_identified.append(lo)
 
     def pack(self):
