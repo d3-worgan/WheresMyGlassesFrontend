@@ -35,8 +35,8 @@ class BackendResponseHandler:
         print("Topics received ", topic)
         print("Message received: ", m_decode)
 
-        if topic == "hermes/dialogueManager/sessionEnded":
-            print(m_decode)
+        if topic == "hermes/nlu/intentNotRecognized":
+            print("Handling intent not recognised...")
         elif topic == "frontend/request":
             self.handle_frontend_request(m_decode)
         elif topic == "backend/response":
