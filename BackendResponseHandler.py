@@ -18,6 +18,7 @@ class BackendResponseHandler:
         self.pClient.loop_start()
         self.pClient.subscribe("backend/response")
         self.pClient.subscribe("hermes/nlu/intentNotRecognized")
+        self.pClient.subscribe("hermes/dialogueManager/sessionEnded")
         self.pClient.subscribe("frontend/request")
         print("Subscribed to backend")
 
@@ -38,6 +39,8 @@ class BackendResponseHandler:
         if topic == "hermes/nlu/intentNotRecognized":
             print("Handling intent not recognised...")
             self.handle_intent_not_recognised()
+        elif topic == "hermes/dialogueManager/sessionEnded":
+            print("Handle session ended")
         elif topic == "frontend/request":
             self.handle_frontend_request(m_decode)
         elif topic == "backend/response":
