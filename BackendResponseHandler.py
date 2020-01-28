@@ -4,6 +4,7 @@ import json
 import time
 from MessageBuilder import MessageBuilder
 
+
 class BackendResponseHandler:
 
     def __init__(self, broker):
@@ -41,11 +42,19 @@ class BackendResponseHandler:
             self.handle_intent_not_recognised()
         elif topic == "hermes/dialogueManager/sessionEnded":
             print("Handle session ended")
+            self.handle_no_input()
         elif topic == "frontend/request":
             self.handle_frontend_request(m_decode)
         elif topic == "backend/response":
             print("Handling backend response...")
             self.handle_backend_response(m_decode)
+
+    def handle_no_input(self):
+        print("Handling no input")
+        out_msg = MessageBuilder.no_input()
+        tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (out_msg)
+        print("Publishing message to TTS: ", out_msg)
+        self.pClient.publish('hermes/tts/say', tts)
 
     def handle_intent_not_recognised(self):
         print("Handle intent not recognised")

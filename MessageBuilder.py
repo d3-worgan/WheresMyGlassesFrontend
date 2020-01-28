@@ -230,6 +230,11 @@ class MessageBuilder:
         message = "okay. what did you want to look for"
         return message
 
+
+    @staticmethod
+    def no_input():
+        message = "did you say something. maybe try again"
+
     @staticmethod
     def delete_double_locations(br):
         """
