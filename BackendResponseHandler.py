@@ -36,7 +36,7 @@ class BackendResponseHandler:
         print("Message received: ", m_decode)
 
         if topic == "hermes/dialogueManager/sessionEnded":
-            pass
+            print(m_decode)
         elif topic == "frontend/request":
             self.handle_frontend_request(m_decode)
         elif topic == "backend/response":
