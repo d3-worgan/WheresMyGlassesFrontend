@@ -37,11 +37,19 @@ class BackendResponseHandler:
 
         if topic == "hermes/nlu/intentNotRecognized":
             print("Handling intent not recognised...")
+            self.handle_intent_not_recognised()
         elif topic == "frontend/request":
             self.handle_frontend_request(m_decode)
         elif topic == "backend/response":
             print("Handling backend response...")
             self.handle_backend_response(m_decode)
+
+    def handle_intent_not_recognised(self):
+        print("Handle intent not recognised")
+        out_msg = MessageBuilder.bad_intent()
+        tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (out_msg)
+        print("Publishing message to TTS: ", out_msg)
+        self.pClient.publish('hermes/tts/say', tts)
 
     def handle_frontend_request(self, m_decode):
         """
