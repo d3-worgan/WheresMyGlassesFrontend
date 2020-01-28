@@ -234,6 +234,7 @@ class MessageBuilder:
     @staticmethod
     def no_input():
         message = "did you say something. maybe try again"
+        return message
 
     @staticmethod
     def delete_double_locations(br):
