@@ -193,7 +193,7 @@ class MessageBuilder:
 
     @staticmethod
     def bad_intent():
-        message = "i did not understand your intent. either i am not trained to do that or you could try move closer to the microphone"
+        message = "i did not understand your intent."
         return message
 
     @staticmethod
