@@ -7,8 +7,6 @@ class MQTTConnection:
     """
 
     def __init__(self, broker, name, on_message=None):
-        #print("Creating new MQTT client: " + name)
-        #print("Broker address: " + broker)
         self.name = name
         self.pClient = mqtt.Client(name)
         self.pClient.on_connect = self.on_connect
