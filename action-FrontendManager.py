@@ -23,6 +23,7 @@ if __name__ == "__main__":
     user_input_handler = UserInputHandler(backend_response_handler.pClient, intent_threshold, slot_threshold)
 
     with Hermes(MQTT_ADDR) as h:
+        # Send incoming intents from Snips to the user input handler
         h.subscribe_intents(user_input_handler.handle_user_input).start()
         print("Subscribed to intents")
         print("Hermes MQTT address: " + MQTT_ADDR)
