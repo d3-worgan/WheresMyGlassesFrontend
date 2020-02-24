@@ -33,7 +33,7 @@ class UserInputHandler:
         elif intent_name == "code-pig:GiveObject":
             self.handle_give_object(hermes, intent_message, session_id)
         else:
-            self.handle_bad_intent(hermes, intent_message)
+            self.handle_bad_intent(hermes, session_id)
 
     def handle_locate_object(self, hermes, intent_message, session_id):
 
