@@ -18,15 +18,7 @@ class ResponseDecoder:
         self.pClient.connect(broker)
         self.pClient.loop_start()
         self.pClient.subscribe("backend/response")
-        #self.pClient.subscribe("hermes/nlu/intentNotRecognized")
-        #self.pClient.subscribe("hermes/dialogueManager/sessionEnded")
-        self.pClient.subscribe("frontend/request")
         print("[ResponseDecoder] Subscribed to backend")
-
-        self.cam = True  # Give information about which camera seen each object
-
-        self.waiting = False
-        #self.wait_for_response()
 
     def handle_message_received(self, client, userdata, msg):
         """
@@ -37,59 +29,9 @@ class ResponseDecoder:
         print("[ResponseDecoder] Topics received ", topic)
         print("[ResponseDecoder] Message received: ", m_decode)
 
-        if topic == "frontend/request":
-            self.handle_frontend_request(m_decode)
-        elif topic == "backend/response":
+        if topic == "backend/response":
             print("[ResponseDecoder] Handling backend response...")
             self.handle_backend_response(m_decode)
-
-    def handle_no_input(self):
-        print("[ResponseDecoder] Handling no input")
-        out_msg = MessageContructor.no_input()
-        tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (out_msg)
-        print("[ResponseDecoder] Publishing message to TTS: ", out_msg)
-        self.pClient.publish('hermes/tts/say', tts)
-
-    def handle_intent_not_recognised(self):
-        print("[ResponseDecoder] Handle intent not recognised")
-        out_msg = MessageContructor.bad_intent()
-        tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (out_msg)
-        print("[ResponseDecoder] Publishing message to TTS: ", out_msg)
-        self.pClient.publish('hermes/tts/say', tts)
-
-    def handle_frontend_request(self, m_decode):
-        """
-        Pass on the frontend's request and start waiting for a response.
-        :param m_decode:
-        :return:
-        """
-        print("[ResponseDecoder] Handle frontend request")
-        self.pClient.publish('backend_handler/frontend_request', m_decode)
-        #self.waiting = True
-        #self.wait_for_response()
-
-    def wait_for_response(self):
-        """
-        Wait for the backend to respond with an answer to the frontend request. If no
-        answer in 3 seconds, keep the user informed. If no answer in 10 seconds, then
-        tell the user there is a problem and stop waiting.
-        :return:
-        """
-        wait = 0
-        while True:
-            if self.waiting:
-                while self.waiting:
-                    if wait > 10:
-                        print("[ResponseDecoder] The location request timed out")
-                        msg = "The cameras did not respond. maybe try ask me again"
-                        tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (msg)
-                        self.pClient.publish('hermes/tts/say', tts)
-                        self.waiting = False
-                        break
-                    else:
-                        print("[ResponseDecoder] Waiting for backend response")
-                        time.sleep(1)
-                        wait += 1
 
     def handle_backend_response(self, m_decode):
         """
@@ -101,6 +43,7 @@ class ResponseDecoder:
         #self.waiting = False
         out_msg = ""
         message = json.loads(m_decode)
+        print("[ResponseDecoder] " + message)
         print("[ResponseDecoder] Loaded message from json")
         print("[ResponseDecoder] " + message)
         print("[ResponseDecoder] Loading response into response object")
