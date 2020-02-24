@@ -18,8 +18,8 @@ class ResponseDecoder:
         self.pClient.connect(broker)
         self.pClient.loop_start()
         self.pClient.subscribe("backend/response")
-        self.pClient.subscribe("hermes/nlu/intentNotRecognized")
-        self.pClient.subscribe("hermes/dialogueManager/sessionEnded")
+        #self.pClient.subscribe("hermes/nlu/intentNotRecognized")
+        #self.pClient.subscribe("hermes/dialogueManager/sessionEnded")
         self.pClient.subscribe("frontend/request")
         print("Subscribed to backend")
 
@@ -132,8 +132,8 @@ class ResponseDecoder:
         elif backend_response.code_name == '6':
             print("Received code 6, the system does not recognise that object")
             out_msg += MessageContructor.unknown_object(backend_response)
-            print(out_msg)
 
+        print("Message for TTS: " + out_msg)
         tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (out_msg)
         print("Publishing message to TTS: ", out_msg)
         self.pClient.publish('hermes/tts/say', tts)
