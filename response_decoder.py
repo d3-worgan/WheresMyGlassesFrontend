@@ -41,9 +41,9 @@ class ResponseDecoder:
         out_msg = ""
         message = json.loads(m_decode)
         print(message['code_name'])
+        print()
         print("[ResponseDecoder] Loading message from json")
         assert message is not None, "backend response to json did not work?"
-        print("[ResponseDecoder] " + message)
         print("[ResponseDecoder] Loading response into response object")
         backend_response = BackendResponse(message['code_name'],
                                            message['original_request'],
@@ -81,4 +81,5 @@ class ResponseDecoder:
 
 
 rd = ResponseDecoder("192.168.0.27", "rd")
-backend_response = '"{"code_name": "6", "original_request": "spectacles", "location_time": "None", "minutes_passed": "None", "locations_identified": []}"'
+backend_responser = "{\"code_name\": \"6\", \"original_request\": \"spectacles\", \"location_time\": \"None\", \"minutes_passed\": \"None\", \"locations_identified\": []}"
+rd.handle_backend_response(backend_responser)
