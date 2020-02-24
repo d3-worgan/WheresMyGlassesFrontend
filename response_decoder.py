@@ -40,8 +40,8 @@ class ResponseDecoder:
         assert m_decode is not None, "handle_backend_response m_decode is None"
         out_msg = ""
         message = json.loads(m_decode)
-        print("[ResponseDecoder] " + message)
-        print("[ResponseDecoder] Loaded message from json")
+        print("[ResponseDecoder] Loading message from json")
+        assert message is not None, "backend response to json did not work?"
         print("[ResponseDecoder] " + message)
         print("[ResponseDecoder] Loading response into response object")
         backend_response = BackendResponse(message['code_name'],
