@@ -5,7 +5,6 @@ from message_constructor import MessageConstructor
 from datetime import datetime
 
 
-
 class ResponseDecoder:
     """
     Listens for responses (processed requests) from the backend system and
@@ -46,7 +45,7 @@ class ResponseDecoder:
         assert message['code_name'].isdigit(), "Response code should be integer"
         assert 0 < int(message['code_name']) <= 6, "Response code should be between 1 and 6"
         #assert datetime.datetime.strptime(message['location_time'], '%YYYY-%MM-%DD %HH-MM')
-        assert message['minutes_passed'].replace('.', '', 1).isdigit() or None, "Minutes passed must be float or None"
+        #assert message['minutes_passed'].replace('.', '', 1).isdigit() or None, "Minutes passed must be float or None"
         print("[ResponseDecoder] Loading response into response object")
         backend_response = BackendResponse(message['code_name'],
                                            message['original_request'],
@@ -89,7 +88,7 @@ if __name__ == "__main__":
     rd = ResponseDecoder("192.168.0.27", "rd")
 
 
-    #backend_respone = "{\"code_name\": \"1\", \"original_request\": \"bottle\", \"location_time\": \"2020-02-24 19:36:40.357148\", \"minutes_passed\": \"0.63\", \"locations_identified\": [\"{\\\"object\": \\\"bottle\\\", \\\"location\\\": \\\"person\\\"}\\\"]}"
-    # backend_responser = "{\"code_name\": \"6\", \"original_request\": \"spectacles\", \"location_time\": \"None\", \"minutes_passed\": \"None\", \"locations_identified\": []}"
+    #backend_response = "{\"code_name\": \"1\", \"original_request\": \"bottle\", \"location_time\": \"2020-02-24 19:36:40.357148\", \"minutes_passed\": \"0.63\", \"locations_identified\": [\"{\\\"object\": \\\"bottle\\\", \\\"location\\\": \\\"person\\\"}\\\"]}"
+    backend_response = "{\"code_name\": \"6\", \"original_request\": \"spectacles\", \"location_time\": \"None\", \"minutes_passed\": \"None\", \"locations_identified\": []}"
 
-    rd.handle_backend_response(backend_respone)
+    rd.handle_backend_response(backend_response)
