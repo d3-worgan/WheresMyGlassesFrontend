@@ -1,11 +1,11 @@
-from BackendResponse import BackendResponse
+from backend_response import BackendResponse
 import paho.mqtt.client as mqtt
 import json
 import time
-from MessageBuilder import MessageBuilder
+from message_constructor import MessageContructor
 
 
-class BackendResponseHandler:
+class ResponseDecoder:
 
     def __init__(self, broker):
         print("Loading paho client")
@@ -37,12 +37,6 @@ class BackendResponseHandler:
         print("Topics received ", topic)
         print("Message received: ", m_decode)
 
-        # if topic == "hermes/nlu/intentNotRecognized":
-        #     print("Handling intent not recognised...")
-        #     self.handle_intent_not_recognised()
-        # elif topic == "hermes/dialogueManager/sessionEnded":
-        #     print("Handle session ended")
-        #     self.handle_no_input()
         if topic == "frontend/request":
             self.handle_frontend_request(m_decode)
         elif topic == "backend/response":
@@ -51,14 +45,14 @@ class BackendResponseHandler:
 
     def handle_no_input(self):
         print("Handling no input")
-        out_msg = MessageBuilder.no_input()
+        out_msg = MessageContructor.no_input()
         tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (out_msg)
         print("Publishing message to TTS: ", out_msg)
         self.pClient.publish('hermes/tts/say', tts)
 
     def handle_intent_not_recognised(self):
         print("Handle intent not recognised")
-        out_msg = MessageBuilder.bad_intent()
+        out_msg = MessageContructor.bad_intent()
         tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (out_msg)
         print("Publishing message to TTS: ", out_msg)
         self.pClient.publish('hermes/tts/say', tts)
@@ -121,23 +115,23 @@ class BackendResponseHandler:
         print("Checking message code.")
         if backend_response.code_name == '1':
             print("Received code 1, located single object in current snapshot")
-            out_msg += MessageBuilder.single_location_current_snapshot(backend_response, self.cam)
+            out_msg += MessageContructor.single_location_current_snapshot(backend_response, self.cam)
         elif backend_response.code_name == '2':
             print("Received code 2, identified multiple locations in current snapshot")
-            out_msg += MessageBuilder.multiple_location_current_snapshot(backend_response, self.cam)
+            out_msg += MessageContructor.multiple_location_current_snapshot(backend_response, self.cam)
         elif backend_response.code_name == '3':
             print("Received code 3, identified single location in previous snapshot")
-            out_msg += MessageBuilder.single_location_previous_snapshot(backend_response, self.cam)
+            out_msg += MessageContructor.single_location_previous_snapshot(backend_response, self.cam)
             print(out_msg)
         elif backend_response.code_name == '4':
             print("Received code 4, identified multiple locations in previous snapshot")
-            out_msg += MessageBuilder.multiple_location_previous_snapshot(backend_response, self.cam)
+            out_msg += MessageContructor.multiple_location_previous_snapshot(backend_response, self.cam)
         elif backend_response.code_name == '5':
             print("Received code 5, could not locate the object")
-            out_msg += MessageBuilder.not_found(backend_response)
+            out_msg += MessageContructor.not_found(backend_response)
         elif backend_response.code_name == '6':
             print("Received code 6, the system does not recognise that object")
-            out_msg += MessageBuilder.unknown_object(backend_response)
+            out_msg += MessageContructor.unknown_object(backend_response)
             print(out_msg)
 
         tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (out_msg)

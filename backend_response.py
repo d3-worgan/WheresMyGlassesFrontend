@@ -1,5 +1,5 @@
 import json
-from LocatedObject import LocatedObject
+from located_object import LocatedObject
 
 
 class BackendResponse:

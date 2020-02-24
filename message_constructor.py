@@ -1,6 +1,7 @@
-from BackendResponse import BackendResponse
+from backend_response import BackendResponse
 
-class MessageBuilder:
+
+class MessageContructor:
     """
     Class containing a number of output messages that can be sent to the text to speech engine.
     If the object name ends with an 's' then adjust response e.g. i seen some glasses, or i seem
@@ -31,7 +32,7 @@ class MessageBuilder:
                                                                       br.locations_identified[0].camera_id)
         # Dont include camera id info
         else:
-            MessageBuilder.delete_double_locations(br)
+            MessageContructor.delete_double_locations(br)
             if br.original_request[-1] == "s":
                 message += "I just seen some %s by a %s" % (br.locations_identified[0].object,
                                                             br.locations_identified[0].location)
@@ -65,7 +66,7 @@ class MessageBuilder:
                 for location in br.locations_identified[1:]:
                     message += "and another by a %s in %s" % (location.location, location.camera_id)
         else:
-            MessageBuilder.delete_double_locations(br)
+            MessageContructor.delete_double_locations(br)
             if br.original_request[-1] == "s":
                 message += "I can see some %s in %s locations. There is one by a %s.." % (br.locations_identified[0].object,
                                                                                           str(len(br.locations_identified)),
@@ -102,10 +103,11 @@ class MessageBuilder:
 
             if float(br.location_time_passed) <= 60.0:
                 message += "That was %s minutes ago" % (round(float(br.location_time_passed), 0))
+                message = message.rstrip(".0")
             elif float(br.location_time_passed) > 60.0:
                 message += "That was at %s" % (br.location_time[11:16])
         else:
-            MessageBuilder.delete_double_locations(br)
+            MessageContructor.delete_double_locations(br)
             if br.original_request[-1] == "s":
                 message += "I seen some %s by a %s ." % (br.locations_identified[0].object, br.locations_identified[0].location)
             else:
@@ -113,6 +115,7 @@ class MessageBuilder:
 
             if float(br.location_time_passed) <= 60.0:
                 message += "That was %s minutes ago" % (round(float(br.location_time_passed), 0))
+                message = message.rstrip(".0")
             elif float(br.location_time_passed) > 60.0:
                 message += "That was at %s" % (br.location_time[11:16])
 
@@ -142,10 +145,11 @@ class MessageBuilder:
 
             if float(br.location_time_passed) <= 60.0:
                 message += " That was %s minutes ago" % (round(float(br.location_time_passed), 0))
+                message = message.rstrip(".0")
             elif float(br.location_time_passed) > 60.0:
                 message += " That was at %s" % (br.location_time[11:16])
         else:
-            MessageBuilder.delete_double_locations(br)
+            MessageContructor.delete_double_locations(br)
             if br.original_request[-1] == "s":
                 message = "I seen some %s in %s locations. There was some by a %s.." % (br.locations_identified[0].object, str(len(br.locations_identified)), br.locations_identified[0].location)
                 for location in br.locations_identified[1:]:
@@ -157,6 +161,7 @@ class MessageBuilder:
 
             if float(br.location_time_passed) <= 60.0:
                 message += " That was %s minutes ago" % (round(float(br.location_time_passed), 0))
+                message = message.rstrip(".0")
             elif float(br.location_time_passed) > 60.0:
                 message += " That was at %s" % (br.location_time[11:16])
 
@@ -188,12 +193,12 @@ class MessageBuilder:
 
     @staticmethod
     def poor_intent():
-        message = "i do not think I heard that correctly, please ask again"
+        message = "i did not hear that correctly. maybe try move closer to the microphone"
         return message
 
     @staticmethod
     def bad_intent():
-        message = "i did not understand your intent. either i am not trained to do that or you could try move closer to the microphone"
+        message = "i cant help you with that. sorry. "
         return message
 
     @staticmethod
@@ -235,6 +240,10 @@ class MessageBuilder:
     def no_input():
         message = "did you say something. maybe try again"
         return message
+
+    @staticmethod
+    def stop_search():
+        message = "okay. if you need something else ask me again"
 
     @staticmethod
     def delete_double_locations(br):
