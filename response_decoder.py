@@ -40,6 +40,7 @@ class ResponseDecoder:
         assert m_decode is not None, "handle_backend_response m_decode is None"
         out_msg = ""
         message = json.loads(m_decode)
+        print(message['code_name'])
         print("[ResponseDecoder] Loading message from json")
         assert message is not None, "backend response to json did not work?"
         print("[ResponseDecoder] " + message)
@@ -77,3 +78,7 @@ class ResponseDecoder:
         tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (out_msg)
         print("[ResponseDecoder] Publishing message to TTS: ", out_msg)
         self.connection.pClient.publish('hermes/tts/say', tts)
+
+
+rd = ResponseDecoder("192.168.0.27", "rd")
+backend_response = '"{"code_name": "6", "original_request": "spectacles", "location_time": "None", "minutes_passed": "None", "locations_identified": []}"'
