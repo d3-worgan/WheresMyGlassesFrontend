@@ -17,10 +17,10 @@ validate_object = None
 if __name__ == "__main__":
 
     # Launch the backend handler to communicate between the backend and the user interface
-    response_decoder = ResponseDecoder(MQTT_IP_ADDR)
+    response_decoder = ResponseDecoder(MQTT_IP_ADDR, "ResponseDecoder")
 
     # Launch the user interface (Snips)
-    input_handler = InputHandler(response_decoder.pClient, intent_threshold, slot_threshold)
+    input_handler = InputHandler(MQTT_IP_ADDR, "InputHandler", intent_threshold, slot_threshold)
 
     with Hermes(MQTT_ADDR) as h:
         # Send incoming intents from Snips to the user input handler

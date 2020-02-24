@@ -1,20 +1,19 @@
-from message_constructor import MessageContructor
-import time
+from message_constructor import MessageConstructor
+from connection import MQTTConnection
 
 
 class InputHandler:
     """
-    Decodes parsed intents from the snips ASR & NLU and sends valid requests
-    to the backend system over MQTT
+    Listens and processes intents and user input from snips.
+    Sends valid requests to the backend system over MQTT
     """
 
-    def __init__(self, pclient, intent_threshold=0.7, slot_threshold=0.7, ):
-        print("[InputHandler] Initialising User Input Handler")
-        self.pclient = pclient  # Connection the backend handler
+    def __init__(self, broker, name, intent_threshold=0.7, slot_threshold=0.7):
+        print("[InputHandler] Initialising user input handler")
+        self.connection = MQTTConnection(broker, name)
         self.intent_threshold = intent_threshold  # For checking confidence in user input
         self.slot_threshold = slot_threshold
-        self.validate_object = None  # Stores the name of the object the system needs to validate
-        self.waiting_for_response = False
+        print("[InputHandler] Input handler loaded.")
 
     def handle_user_input(self, hermes, intent_message):
         """
@@ -140,50 +139,50 @@ class InputHandler:
         """
         # Send request to backend
         if object_name:
-            print("[InputHandler] Sending message to controller")
-            self.pclient.publish("frontend/request", object_name)
-            message = MessageContructor.search_object(object_name)
+            print("[InputHandler] Sending request to backend")
+            self.connection.pClient.publish("frontend/request", object_name)
+            message = MessageConstructor.search_object(object_name)
             hermes.publish_end_session(session_id, message)
         else:
             hermes.publish_end_session(session_id, "Error")
 
     def handle_poor_intent(self, hermes, session_id):
         """When an intents confidence is too low"""
-        sentence = MessageContructor.poor_intent()
+        sentence = MessageConstructor.poor_intent()
         hermes.publish_end_session(session_id, sentence)
 
     def handle_bad_intent(self, hermes, session_id):
         """When an intent is not "LocateObject" """
-        message = MessageContructor.bad_intent()
+        message = MessageConstructor.bad_intent()
         hermes.publish_end_session(session_id, message)
 
     def handle_no_object(self, hermes, session_id):
         """When the user did not specify an object or the system did not hear it"""
-        sentence = MessageContructor.no_object()
+        sentence = MessageConstructor.no_object()
         hermes.publish_continue_session(session_id, sentence, ["code-pig:GiveObject", "code-pig:StopSearch"])
 
     def handle_poor_object(self, hermes, session_id, object_name):
         """When the system is not sure it heard the object correctly"""
-        sentence = MessageContructor.poor_object(object_name)
+        sentence = MessageConstructor.poor_object(object_name)
         self.validate_object = object_name
         hermes.publish_continue_session(session_id, sentence, ["code-pig:ConfirmObject", "code-pig:StopSearch"])
 
     def handle_bad_object(self, hermes, session_id):
         """When the user is specifying an object that system doesnt recognise"""
-        sentence = MessageContructor.bad_object()
+        sentence = MessageConstructor.bad_object()
         hermes.publish_end_session(session_id, sentence)
 
     def handle_negative_confirmation(self, hermes, session_id):
         """When the user informs the system that wasnt the object they wanted to search for"""
-        sentence = MessageContructor.what_object()
+        sentence = MessageConstructor.what_object()
         hermes.publish_continue_session(session_id, sentence, ["code-pig:GiveObject", "code-pig:StopSearch"])
 
     def handle_positive_confirmation(self, hermes, session_id, object_name):
         """The user confirms the system heard their request properly"""
-        sentence = MessageContructor.search_object(object_name)
+        sentence = MessageConstructor.search_object(object_name)
         self.send_frontend_request(hermes, session_id, object_name)
 
     def handle_stop_search(self, hermes, session_id):
         """When the user does not want to search for an object or end the search"""
-        sentence = MessageContructor.stop_search()
+        sentence = MessageConstructor.stop_search()
         hermes.publish_end_session(session_id, sentence)

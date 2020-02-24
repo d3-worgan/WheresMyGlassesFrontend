@@ -1,7 +1,7 @@
 from backend_response import BackendResponse
 
 
-class MessageContructor:
+class MessageConstructor:
     """
     Class containing a number of output messages that can be sent to the text to speech engine.
     If the object name ends with an 's' then adjust response e.g. i seen some glasses, or i seem
@@ -9,8 +9,6 @@ class MessageContructor:
     location. I.e. the 'cam' parameter specifies whether to include camera information in the
     message.
     """
-    def __init__(self):
-        print("Loading message builder...")
 
     @staticmethod
     def single_location_current_snapshot(br, cam):
@@ -32,7 +30,7 @@ class MessageContructor:
                                                                       br.locations_identified[0].camera_id)
         # Dont include camera id info
         else:
-            MessageContructor.delete_double_locations(br)
+            MessageConstructor.delete_double_locations(br)
             if br.original_request[-1] == "s":
                 message += "I just seen some %s by a %s" % (br.locations_identified[0].object,
                                                             br.locations_identified[0].location)
@@ -66,7 +64,7 @@ class MessageContructor:
                 for location in br.locations_identified[1:]:
                     message += "and another by a %s in %s" % (location.location, location.camera_id)
         else:
-            MessageContructor.delete_double_locations(br)
+            MessageConstructor.delete_double_locations(br)
             if br.original_request[-1] == "s":
                 message += "I can see some %s in %s locations. There is one by a %s.." % (br.locations_identified[0].object,
                                                                                           str(len(br.locations_identified)),
@@ -107,7 +105,7 @@ class MessageContructor:
             elif float(br.location_time_passed) > 60.0:
                 message += "That was at %s" % (br.location_time[11:16])
         else:
-            MessageContructor.delete_double_locations(br)
+            MessageConstructor.delete_double_locations(br)
             if br.original_request[-1] == "s":
                 message += "I seen some %s by a %s ." % (br.locations_identified[0].object, br.locations_identified[0].location)
             else:
@@ -149,7 +147,7 @@ class MessageContructor:
             elif float(br.location_time_passed) > 60.0:
                 message += " That was at %s" % (br.location_time[11:16])
         else:
-            MessageContructor.delete_double_locations(br)
+            MessageConstructor.delete_double_locations(br)
             if br.original_request[-1] == "s":
                 message = "I seen some %s in %s locations. There was some by a %s.." % (br.locations_identified[0].object, str(len(br.locations_identified)), br.locations_identified[0].location)
                 for location in br.locations_identified[1:]:
@@ -198,7 +196,7 @@ class MessageContructor:
 
     @staticmethod
     def bad_intent():
-        message = "i cant help you with that. sorry. "
+        message = "i cannot help you with that request. sorry. "
         return message
 
     @staticmethod
