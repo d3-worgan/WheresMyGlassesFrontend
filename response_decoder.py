@@ -1,5 +1,4 @@
 from backend_response import BackendResponse
-import paho.mqtt.client as mqtt
 import json
 from connection import MQTTConnection
 from message_constructor import MessageConstructor

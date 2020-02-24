@@ -20,7 +20,7 @@ class MQTTConnection:
 
     def subscribe_topic(self, topic):
         self.pClient.subscribe(topic)
-        print(f"{self.name} client Subscribed to " + topic)
+        print(self.name + " client subscribed to " + topic)
 
     def on_log(client, userdata, level, buf):
         """
