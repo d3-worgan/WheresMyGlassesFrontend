@@ -36,6 +36,8 @@ class ResponseDecoder:
         :return:
         """
         print("Ballbags")
+        print("m_decode: " + m_decode)
+        assert m_decode is not None, "handle_backend_response m_decode is None"
         out_msg = ""
         message = json.loads(m_decode)
         print("[ResponseDecoder] " + message)
