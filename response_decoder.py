@@ -74,12 +74,11 @@ class ResponseDecoder:
             print("[ResponseDecoder] Received code 6, the system does not recognise that object")
             out_msg += MessageConstructor.unknown_object(backend_response)
 
-        print("[ResponseDecoder] Message for TTS: " + out_msg)
         tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (out_msg)
         print("[ResponseDecoder] Publishing message to TTS: ", out_msg)
         self.connection.pClient.publish('hermes/tts/say', tts)
 
 
-rd = ResponseDecoder("192.168.0.27", "rd")
-backend_responser = "{\"code_name\": \"6\", \"original_request\": \"spectacles\", \"location_time\": \"None\", \"minutes_passed\": \"None\", \"locations_identified\": []}"
-rd.handle_backend_response(backend_responser)
+# rd = ResponseDecoder("192.168.0.27", "rd")
+# backend_responser = "{\"code_name\": \"6\", \"original_request\": \"spectacles\", \"location_time\": \"None\", \"minutes_passed\": \"None\", \"locations_identified\": []}"
+# rd.handle_backend_response(backend_responser)
