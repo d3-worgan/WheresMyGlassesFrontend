@@ -9,7 +9,7 @@ class InputHandler:
     """
 
     def __init__(self, pclient, intent_threshold=0.7, slot_threshold=0.7, ):
-        print("Initialising User Input Handler")
+        print("[InputHandler] Initialising User Input Handler")
         self.pclient = pclient  # Connection the backend handler
         self.intent_threshold = intent_threshold  # For checking confidence in user input
         self.slot_threshold = slot_threshold
@@ -29,9 +29,9 @@ class InputHandler:
         intent_name = intent_message.intent.intent_name
         intent_confidence = intent_message.intent.confidence_score
 
-        print("Session ID " + str(session_id))
-        print("Intent name " + intent_name)
-        print("intent confidence " + str(intent_confidence))
+        print("[InputHandler] Session ID " + str(session_id))
+        print("[InputHandler] Intent name " + intent_name)
+        print("[InputHandler] intent confidence " + str(intent_confidence))
 
         # Validate and handle incoming intents
         if intent_confidence < self.intent_threshold:
@@ -96,7 +96,7 @@ class InputHandler:
         # Extract the object name and confidence
         slot_value, slot_score = self.extract_slot_info(intent_message.slots.item)
 
-        print("Extracted slot")
+        print("[InputHandler] Extracted slot")
 
         if not slot_value:
             self.handle_bad_intent(hermes, intent_message)
@@ -117,16 +117,16 @@ class InputHandler:
         """
         # Extract the object name and confidence
         if slot:
-            print("Extracting slot info")
+            print("[InputHandler] Extracting slot info")
             slot_value = slot.first().value
             slot_score = 0
-            print("Slot value " + slot_value)
+            print("[InputHandler] Slot value " + slot_value)
             for slots in slot:
                 slot_score = slots.confidence_score
-            print("Slot score ", str(slot_score))
+            print("[InputHandler] Slot score ", str(slot_score))
             return slot_value, slot_score
         else:
-            print("No slot to extract")
+            print("[InputHandler] No slot to extract")
             return None, None
 
     def send_frontend_request(self, hermes, session_id, object_name):
@@ -140,7 +140,7 @@ class InputHandler:
         """
         # Send request to backend
         if object_name:
-            print("Sending message to controller")
+            print("[InputHandler] Sending message to controller")
             self.pclient.publish("frontend/request", object_name)
             message = MessageContructor.search_object(object_name)
             hermes.publish_end_session(session_id, message)

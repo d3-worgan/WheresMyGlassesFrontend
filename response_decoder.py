@@ -21,7 +21,7 @@ class ResponseDecoder:
         #self.pClient.subscribe("hermes/nlu/intentNotRecognized")
         #self.pClient.subscribe("hermes/dialogueManager/sessionEnded")
         self.pClient.subscribe("frontend/request")
-        print("Subscribed to backend")
+        print("[ResponseDecoder] Subscribed to backend")
 
         self.cam = True  # Give information about which camera seen each object
 
@@ -34,27 +34,27 @@ class ResponseDecoder:
         """
         topic = msg.topic
         m_decode = str(msg.payload.decode("utf-8", "ignore"))
-        print("Topics received ", topic)
-        print("Message received: ", m_decode)
+        print("[ResponseDecoder] Topics received ", topic)
+        print("[ResponseDecoder] Message received: ", m_decode)
 
         if topic == "frontend/request":
             self.handle_frontend_request(m_decode)
         elif topic == "backend/response":
-            print("Handling backend response...")
+            print("[ResponseDecoder] Handling backend response...")
             self.handle_backend_response(m_decode)
 
     def handle_no_input(self):
-        print("Handling no input")
+        print("[ResponseDecoder] Handling no input")
         out_msg = MessageContructor.no_input()
         tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (out_msg)
-        print("Publishing message to TTS: ", out_msg)
+        print("[ResponseDecoder] Publishing message to TTS: ", out_msg)
         self.pClient.publish('hermes/tts/say', tts)
 
     def handle_intent_not_recognised(self):
-        print("Handle intent not recognised")
+        print("[ResponseDecoder] Handle intent not recognised")
         out_msg = MessageContructor.bad_intent()
         tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (out_msg)
-        print("Publishing message to TTS: ", out_msg)
+        print("[ResponseDecoder] Publishing message to TTS: ", out_msg)
         self.pClient.publish('hermes/tts/say', tts)
 
     def handle_frontend_request(self, m_decode):
@@ -63,7 +63,7 @@ class ResponseDecoder:
         :param m_decode:
         :return:
         """
-        print("Handle frontend request")
+        print("[ResponseDecoder] Handle frontend request")
         self.pClient.publish('backend_handler/frontend_request', m_decode)
         #self.waiting = True
         #self.wait_for_response()
@@ -80,14 +80,14 @@ class ResponseDecoder:
             if self.waiting:
                 while self.waiting:
                     if wait > 10:
-                        print("The location request timed out")
-                        msg = "The cameras did not respond. maybe try ask me again"
+                        print("[ResponseDecoder] The location request timed out")
+                        msg = "[ResponseDecoder] The cameras did not respond. maybe try ask me again"
                         tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (msg)
                         self.pClient.publish('hermes/tts/say', tts)
                         self.waiting = False
                         break
                     else:
-                        print("Waiting for backend response")
+                        print("[ResponseDecoder] Waiting for backend response")
                         time.sleep(1)
                         wait += 1
 
@@ -101,36 +101,36 @@ class ResponseDecoder:
         #self.waiting = False
         out_msg = ""
         message = json.loads(m_decode)
-        print("Loaded message from json")
+        print("[ResponseDecoder] Loaded message from json")
         print(message)
-        print("Loading response into response object")
+        print("[ResponseDecoder] Loading response into response object")
         backend_response = BackendResponse(message['code_name'],
                                            message['original_request'],
                                            message['location_time'],
                                            message['minutes_passed'],
                                            message['locations_identified'])
-        print("Backend response loaded")
+        print("[ResponseDecoder] Backend response loaded")
         backend_response.print()
 
         print("Checking message code.")
         if backend_response.code_name == '1':
-            print("Received code 1, located single object in current snapshot")
+            print("[ResponseDecoder] Received code 1, located single object in current snapshot")
             out_msg += MessageContructor.single_location_current_snapshot(backend_response, self.cam)
         elif backend_response.code_name == '2':
-            print("Received code 2, identified multiple locations in current snapshot")
+            print("[ResponseDecoder] Received code 2, identified multiple locations in current snapshot")
             out_msg += MessageContructor.multiple_location_current_snapshot(backend_response, self.cam)
         elif backend_response.code_name == '3':
-            print("Received code 3, identified single location in previous snapshot")
+            print("[ResponseDecoder] Received code 3, identified single location in previous snapshot")
             out_msg += MessageContructor.single_location_previous_snapshot(backend_response, self.cam)
             print(out_msg)
         elif backend_response.code_name == '4':
-            print("Received code 4, identified multiple locations in previous snapshot")
+            print("[ResponseDecoder] Received code 4, identified multiple locations in previous snapshot")
             out_msg += MessageContructor.multiple_location_previous_snapshot(backend_response, self.cam)
         elif backend_response.code_name == '5':
-            print("Received code 5, could not locate the object")
+            print("[ResponseDecoder] Received code 5, could not locate the object")
             out_msg += MessageContructor.not_found(backend_response)
         elif backend_response.code_name == '6':
-            print("Received code 6, the system does not recognise that object")
+            print("[ResponseDecoder] Received code 6, the system does not recognise that object")
             out_msg += MessageContructor.unknown_object(backend_response)
 
         print("Message for TTS: " + out_msg)
@@ -142,19 +142,19 @@ class ResponseDecoder:
         """
         Use for debugging paho client
         """
-        print("log: " + buf)
+        print("[ResponseDecoder] log: " + buf)
 
     def on_connect(client, userdata, flags, rc):
         """
         Use for debugging the paho client
         """
         if rc == 0:
-            print("Connected OK")
+            print("[ResponseDecoder] Connected OK")
         else:
-            print("Bad connection, returned code ", rc)
+            print("[ResponseDecoder] Bad connection, returned code ", rc)
 
     def on_disconnect(client, userdata, flags, rc=0):
         """
         Use for debugging the paho client
         """
-        print("Disconnected result code " + str(rc))
+        print("[ResponseDecoder] Disconnected result code " + str(rc))
