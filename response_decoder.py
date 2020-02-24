@@ -8,8 +8,8 @@ from message_constructor import MessageContructor
 class ResponseDecoder:
 
     def __init__(self, broker):
-        print("Loading paho client")
-        print("Action code broker address: " + broker)
+        print("[ResponseDecoder] Loading paho client")
+        print("[ResponseDecoder] Action code broker address: " + broker)
         self.pClient = mqtt.Client("Frontend")
         self.pClient.on_connect = self.on_connect
         self.pClient.on_log = self.on_log
@@ -81,7 +81,7 @@ class ResponseDecoder:
                 while self.waiting:
                     if wait > 10:
                         print("[ResponseDecoder] The location request timed out")
-                        msg = "[ResponseDecoder] The cameras did not respond. maybe try ask me again"
+                        msg = "The cameras did not respond. maybe try ask me again"
                         tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (msg)
                         self.pClient.publish('hermes/tts/say', tts)
                         self.waiting = False
@@ -102,7 +102,7 @@ class ResponseDecoder:
         out_msg = ""
         message = json.loads(m_decode)
         print("[ResponseDecoder] Loaded message from json")
-        print(message)
+        print("[ResponseDecoder] " + message)
         print("[ResponseDecoder] Loading response into response object")
         backend_response = BackendResponse(message['code_name'],
                                            message['original_request'],
@@ -112,7 +112,7 @@ class ResponseDecoder:
         print("[ResponseDecoder] Backend response loaded")
         backend_response.print()
 
-        print("Checking message code.")
+        print("[ResponseDecoder] Checking message code.")
         if backend_response.code_name == '1':
             print("[ResponseDecoder] Received code 1, located single object in current snapshot")
             out_msg += MessageContructor.single_location_current_snapshot(backend_response, self.cam)
@@ -133,9 +133,9 @@ class ResponseDecoder:
             print("[ResponseDecoder] Received code 6, the system does not recognise that object")
             out_msg += MessageContructor.unknown_object(backend_response)
 
-        print("Message for TTS: " + out_msg)
+        print("[ResponseDecoder] Message for TTS: " + out_msg)
         tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (out_msg)
-        print("Publishing message to TTS: ", out_msg)
+        print("[ResponseDecoder] Publishing message to TTS: ", out_msg)
         self.pClient.publish('hermes/tts/say', tts)
 
     def on_log(client, userdata, level, buf):

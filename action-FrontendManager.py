@@ -25,5 +25,5 @@ if __name__ == "__main__":
     with Hermes(MQTT_ADDR) as h:
         # Send incoming intents from Snips to the user input handler
         h.subscribe_intents(input_handler.handle_user_input).start()
-        print("Subscribed to intents")
-        print("Hermes MQTT address: " + MQTT_ADDR)
+        print("[FrontendManager] Subscribed to intents")
+        print("[FrontendManager] Hermes MQTT address: " + MQTT_ADDR)

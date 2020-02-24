@@ -40,8 +40,8 @@ class BackendResponse:
         return json.dumps(package)
 
     def print(self):
-        print("Code name: ", self.code_name)
-        print("Location_time: ", self.location_time)
-        print("Minutes passed: ", self.location_time_passed)
+        print("[BackendResponse] Code name: ", self.code_name)
+        print("[BackendResponse] Location_time: ", self.location_time)
+        print("[BackendResponse] Minutes passed: ", self.location_time_passed)
         for loc in self.locations_identified:
             print(loc.object + " " + loc.location)
