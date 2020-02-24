@@ -7,8 +7,8 @@ class MQTTConnection:
     """
 
     def __init__(self, broker, name, on_message=None):
-        print("Creating new MQTT client: " + name)
-        print("Broker address: " + broker)
+        #print("Creating new MQTT client: " + name)
+        #print("Broker address: " + broker)
         self.name = name
         self.pClient = mqtt.Client(name)
         self.pClient.on_connect = self.on_connect
@@ -19,6 +19,7 @@ class MQTTConnection:
         self.pClient.loop_start()
 
     def subscribe_topic(self, topic):
+        assert topic is not None, self.name + " did not specify a topic to subscribe to."
         self.pClient.subscribe(topic)
         print(self.name + " client subscribed to " + topic)
 
