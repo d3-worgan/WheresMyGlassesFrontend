@@ -10,10 +10,11 @@ class ResponseDecoder:
     Listens for responses (processed requests) from the backend system and
     constructs messages for output based on the results.
     """
-    def __init__(self, broker, name):
+    def __init__(self, broker, name, cam_info):
         print("[ResponseDecoder] Loading response decoder...")
         self.connection = MQTTConnection(broker, name, self.handle_message_received)
         self.connection.pClient.subscribe("backend/response")
+        self.cam_info = cam_info
         print("[ResponseDecoder] Done.")
 
     def handle_message_received(self, client, userdata, msg):
@@ -58,24 +59,23 @@ class ResponseDecoder:
         print("[ResponseDecoder] Checking message code.")
         if backend_response.code_name == '1':
             print("[ResponseDecoder] Received code 1, located single object in current snapshot")
-            out_msg += MessageConstructor.single_location_current_snapshot(backend_response, self.cam)
+            out_msg += MessageConstructor.single_location_current_snapshot(backend_response, self.cam_info)
         elif backend_response.code_name == '2':
             print("[ResponseDecoder] Received code 2, identified multiple locations in current snapshot")
-            out_msg += MessageConstructor.multiple_location_current_snapshot(backend_response, self.cam)
+            out_msg += MessageConstructor.multiple_location_current_snapshot(backend_response, self.cam_info)
         elif backend_response.code_name == '3':
             print("[ResponseDecoder] Received code 3, identified single location in previous snapshot")
-            out_msg += MessageConstructor.single_location_previous_snapshot(backend_response, self.cam)
-            print(out_msg)
+            out_msg += MessageConstructor.single_location_previous_snapshot(backend_response, self.cam_info)
         elif backend_response.code_name == '4':
             print("[ResponseDecoder] Received code 4, identified multiple locations in previous snapshot")
-            out_msg += MessageConstructor.multiple_location_previous_snapshot(backend_response, self.cam)
+            out_msg += MessageConstructor.multiple_location_previous_snapshot(backend_response, self.cam_info)
         elif backend_response.code_name == '5':
             print("[ResponseDecoder] Received code 5, could not locate the object")
             out_msg += MessageConstructor.not_found(backend_response)
         elif backend_response.code_name == '6':
             print("[ResponseDecoder] Received code 6, the system does not recognise that object")
             out_msg += MessageConstructor.unknown_object(backend_response)
-
+        print(out_msg)
         tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (out_msg)
         print("[ResponseDecoder] Publishing message to TTS: ", out_msg)
         self.connection.pClient.publish('hermes/tts/say', tts)

@@ -7,20 +7,21 @@ from response_decoder import ResponseDecoder
 
 """Start point for frontend. Subscribe to input from snips and responses from backend."""
 
-
 MQTT_IP_ADDR = "192.168.0.27"
 MQTT_PORT = 1883
 MQTT_ADDR = "{}:{}".format(MQTT_IP_ADDR, str(MQTT_PORT))
 
+# Confidence thresholds
 intent_threshold = 0.7
 slot_threshold = 0.7
 
-validate_object = None
+# Describe which camera located the object
+cam_info = True
 
 if __name__ == "__main__":
 
     # Launch the backend handler to communicate between the backend and the user interface
-    response_decoder = ResponseDecoder(MQTT_IP_ADDR, "ResponseDecoder")
+    response_decoder = ResponseDecoder(MQTT_IP_ADDR, "ResponseDecoder", cam_info)
 
     # Launch the user interface (Snips)
     input_handler = InputHandler(MQTT_IP_ADDR, "InputHandler", intent_threshold, slot_threshold)
