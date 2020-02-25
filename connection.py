@@ -8,17 +8,17 @@ class MQTTConnection:
 
     def __init__(self, broker, name, on_message=None):
         self.name = name
-        self.pClient = mqtt.Client(name)
-        self.pClient.on_connect = self.on_connect
-        self.pClient.on_log = self.on_log
-        self.pClient.on_disconnect = self.on_disconnect
-        self.pClient.on_message = on_message  # Main callback (connection)
-        self.pClient.connect(broker)
-        self.pClient.loop_start()
+        self.con = mqtt.Client(name)
+        self.con.on_connect = self.on_connect
+        self.con.on_log = self.on_log
+        self.con.on_disconnect = self.on_disconnect
+        self.con.on_message = on_message  # Main callback (connection)
+        self.con.connect(broker)
+        self.con.loop_start()
 
     def subscribe_topic(self, topic):
         assert topic is not None, self.name + " did not specify a topic to subscribe to."
-        self.pClient.subscribe(topic)
+        self.con.subscribe(topic)
         print(self.name + " client subscribed to " + topic)
 
     def on_log(client, userdata, level, buf):

@@ -13,7 +13,7 @@ class ResponseDecoder:
     def __init__(self, broker, name, cam_info):
         print("[ResponseDecoder] Loading response decoder...")
         self.connection = MQTTConnection(broker, name, self.handle_message_received)
-        self.connection.pClient.subscribe("backend/response")
+        self.connection.con.subscribe("backend/response")
         self.cam_info = cam_info
         print("[ResponseDecoder] Done.")
 
@@ -81,7 +81,7 @@ class ResponseDecoder:
         print(out_msg)
         tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (out_msg)
         print("[ResponseDecoder] Publishing message to TTS: ", out_msg)
-        self.connection.pClient.publish('hermes/tts/say', tts)
+        self.connection.con.publish('hermes/tts/say', tts)
 
 
 if __name__ == "__main__":

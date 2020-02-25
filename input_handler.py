@@ -4,16 +4,24 @@ from connection import MQTTConnection
 
 class InputHandler:
     """
-    Listens and processes intents and user input from snips.
+    Listens and processes intents / user input from snips.
     Sends valid requests to the backend system over MQTT
     """
 
     def __init__(self, broker, name, intent_threshold=0.7, slot_threshold=0.7):
         print("[InputHandler] Initialising user input handler")
-        self.connection = MQTTConnection(broker, name)
         self.intent_threshold = intent_threshold  # For checking confidence in user input
         self.slot_threshold = slot_threshold
+        self.connection = MQTTConnection(broker, name)
+        #self.connection.con.subscribe("hermes/nlu/intentNotRecognized")
         print("[InputHandler] Input handler loaded.")
+
+    def handle_not_recognised(self, hermes, message):
+        """
+        Process incoming messages from the backend
+        """
+        message = MessageConstructor.bad_intent()
+        hermes.publish_end_session()
 
     def handle_user_input(self, hermes, intent_message):
         """
@@ -151,7 +159,7 @@ class InputHandler:
         # Send request to backend
         if object_name:
             print("[InputHandler] Sending request to backend")
-            self.connection.pClient.publish("frontend/request", object_name)
+            self.connection.con.publish("frontend/request", object_name)
             message = MessageConstructor.search_object(object_name)
             hermes.publish_end_session(session_id, message)
         else:
