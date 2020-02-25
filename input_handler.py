@@ -34,7 +34,10 @@ class InputHandler:
 
         # Validate and handle incoming intents
         if intent_confidence < self.intent_threshold:
-            self.handle_poor_intent(hermes, session_id)
+            if intent_name == "code-pig:StopSearch":
+                self.handle_stop_search(hermes, session_id)
+            else:
+                self.handle_poor_intent(hermes, session_id)
         elif intent_name == "code-pig:LocateObject":
             self.handle_locate_object(hermes, intent_message, session_id)
         elif intent_name == "code-pig:ConfirmObject":
