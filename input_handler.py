@@ -16,12 +16,11 @@ class InputHandler:
         #self.connection.con.subscribe("hermes/nlu/intentNotRecognized")
         print("[InputHandler] Input handler loaded.")
 
-    def handle_not_recognised(self, hermes, message):
+    def handle_session_ended(self, hermes, message):
         """
         Process incoming messages from the backend
         """
-        message = MessageConstructor.bad_intent()
-        hermes.publish_end_session()
+        print("The session ended!")
 
     def handle_user_input(self, hermes, intent_message):
         """
