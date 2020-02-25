@@ -195,5 +195,7 @@ class InputHandler:
 
     def handle_stop_search(self, hermes, session_id):
         """When the user does not want to search for an object or end the search"""
+        print("[InputHandler] Stopping the search")
         sentence = MessageConstructor.stop_search()
+        print("[InputHandler] " + sentence)
         hermes.publish_end_session(session_id, sentence)
