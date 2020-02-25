@@ -112,7 +112,7 @@ class MessageConstructor:
                 message += "I seen a %s by a %s." % (br.locations_identified[0].object, br.locations_identified[0].location)
 
             if float(br.location_time_passed) <= 60.0:
-                message += "That was %s minutes ago" % str((round(float(br.location_time_passed), 0))).rstrip(".0")
+                message += " That was %s minutes ago" % str((round(float(br.location_time_passed), 0))).rstrip(".0")
                 message = message.rstrip(".0")
             elif float(br.location_time_passed) > 60.0:
                 message += "That was at %s" % (br.location_time[11:16])
