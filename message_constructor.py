@@ -55,28 +55,28 @@ class MessageConstructor:
                                                                                                        br.locations_identified[0].location,
                                                                                                        br.locations_identified[0].camera_id)
                 for location in br.locations_identified[1:]:
-                    message += "and some more by a %s in %s" % (location.location, location.camera_id)
+                    message += "and some more by a %s in %s. " % (location.location, location.camera_id)
             else:
-                message += "I can see a %s in %s locations. There is one by a %s in %s" % (br.locations_identified[0].object,
+                message += "I can see a %s in %s locations. There is one by a %s in %s. " % (br.locations_identified[0].object,
                                                                                            str(len(br.locations_identified)),
                                                                                            br.locations_identified[0].location,
                                                                                            br.locations_identified[0].camera_id)
                 for location in br.locations_identified[1:]:
-                    message += "and another by a %s in %s" % (location.location, location.camera_id)
+                    message += "and another by a %s in %s. " % (location.location, location.camera_id)
         else:
             MessageConstructor.delete_double_locations(br)
             if br.original_request[-1] == "s":
-                message += "I can see some %s in %s locations. There is one by a %s.." % (br.locations_identified[0].object,
+                message += "I can see some %s in %s locations. There is one by a %s." % (br.locations_identified[0].object,
                                                                                           str(len(br.locations_identified)),
                                                                                           br.locations_identified[0].location)
                 for location in br.locations_identified[1:]:
-                    message += "and some more by a %s.." % (location.location)
+                    message += "and some more by a %s." % (location.location)
             else:
-                message = "I can see a %s in %s locations. There is one by a %s.." % (br.locations_identified[0].object,
+                message = "I can see a %s in %s locations. There is one by a %s. " % (br.locations_identified[0].object,
                                                                                       str(len(br.locations_identified)),
                                                                                       br.locations_identified[0].location)
                 for location in br.locations_identified[1:]:
-                    message += "and another by a %s.." % (location.location)
+                    message += "and another by a %s. " % (location.location)
 
         print(message)
         return message
@@ -91,16 +91,16 @@ class MessageConstructor:
         message = ""
         if cam:
             if br.original_request[-1] == "s":
-                message += "I seen some %s by a %s in camera %s ." % (br.locations_identified[0].object,
+                message += "I seen some %s by a %s in camera %s. " % (br.locations_identified[0].object,
                                                                      br.locations_identified[0].location,
                                                                      br.locations_identified[0].camera_id)
             else:
-                message += "I seen a %s by a %s in camera %s ." % (br.locations_identified[0].object,
+                message += "I seen a %s by a %s in camera %s. " % (br.locations_identified[0].object,
                                                                   br.locations_identified[0].location,
                                                                   br.locations_identified[0].camera_id)
 
             if float(br.location_time_passed) <= 60.0:
-                message += "That was %s minutes ago" % (round(float(br.location_time_passed), 0))
+                message += "That was %s minutes ago" % str((round(float(br.location_time_passed), 0))).rstrip(".0")
                 message = message.rstrip(".0")
             elif float(br.location_time_passed) > 60.0:
                 message += "That was at %s" % (br.location_time[11:16])
@@ -109,10 +109,10 @@ class MessageConstructor:
             if br.original_request[-1] == "s":
                 message += "I seen some %s by a %s. " % (br.locations_identified[0].object, br.locations_identified[0].location)
             else:
-                message += "I seen a %s by a %s." % (br.locations_identified[0].object, br.locations_identified[0].location)
+                message += "I seen a %s by a %s. " % (br.locations_identified[0].object, br.locations_identified[0].location)
 
             if float(br.location_time_passed) <= 60.0:
-                message += " That was %s minutes ago" % str((round(float(br.location_time_passed), 0))).rstrip(".0")
+                message += "That was %s minutes ago" % str((round(float(br.location_time_passed), 0))).rstrip(".0")
                 message = message.rstrip(".0")
             elif float(br.location_time_passed) > 60.0:
                 message += "That was at %s" % (br.location_time[11:16])
@@ -128,40 +128,40 @@ class MessageConstructor:
 
         if cam:
             if br.original_request[-1] == "s":
-                message = "I seen some %s in %s locations. There was some by a %s in camera %s" % (br.locations_identified[0].object,
+                message = "I seen some %s in %s locations. There was some by a %s in camera %s. " % (br.locations_identified[0].object,
                                                                                                    str(len(br.locations_identified)),
                                                                                                    br.locations_identified[0].location,
                                                                                                    br.locations_identified[0].camera_id)
                 for location in br.locations_identified[1:]:
-                    message += "and some more by a %s in camera %s" % (location.location, location.camera_id)
+                    message += "and some more by a %s in camera %s. " % (location.location, location.camera_id)
             else:
-                message = "I seen a %s in %s locations. There was one by a %s.." % (
+                message = "I seen a %s in %s locations. There was one by a %s. " % (
                 br.locations_identified[0].object, str(len(br.locations_identified)),
                 br.locations_identified[0].location)
                 for location in br.locations_identified[1:]:
-                    message += "and another by a %s." % (location.location)
+                    message += "and another by a %s. " % (location.location)
 
             if float(br.location_time_passed) <= 60.0:
-                message += " That was %s minutes ago" % (round(float(br.location_time_passed), 0))
+                message += " That was %s minutes ago" % str((round(float(br.location_time_passed), 0))).rstrip(".0")
                 message = message.rstrip(".0")
             elif float(br.location_time_passed) > 60.0:
                 message += " That was at %s" % (br.location_time[11:16])
         else:
             MessageConstructor.delete_double_locations(br)
             if br.original_request[-1] == "s":
-                message = "I seen some %s in %s locations. There was some by a %s.." % (br.locations_identified[0].object, str(len(br.locations_identified)), br.locations_identified[0].location)
+                message = "I seen some %s in %s locations. There was some by a %s. " % (br.locations_identified[0].object, str(len(br.locations_identified)), br.locations_identified[0].location)
                 for location in br.locations_identified[1:]:
                     message += "and some more by a %s." % (location.location)
             else:
-                message = "I seen a %s in %s locations. There was one by a %s.." % (br.locations_identified[0].object, str(len(br.locations_identified)), br.locations_identified[0].location)
+                message = "I seen a %s in %s locations. There was one by a %s. " % (br.locations_identified[0].object, str(len(br.locations_identified)), br.locations_identified[0].location)
                 for location in br.locations_identified[1:]:
-                    message += "and another by a %s." % (location.location)
+                    message += "and another by a %s. " % (location.location)
 
             if float(br.location_time_passed) <= 60.0:
-                message += " That was %s minutes ago" % (round(float(br.location_time_passed), 0))
+                message += "That was %s minutes ago" % str((round(float(br.location_time_passed), 0))).rstrip(".0")
                 message = message.rstrip(".0")
             elif float(br.location_time_passed) > 60.0:
-                message += " That was at %s" % (br.location_time[11:16])
+                message += "That was at %s" % (br.location_time[11:16])
 
         print(message)
         return message
@@ -196,7 +196,7 @@ class MessageConstructor:
 
     @staticmethod
     def bad_intent():
-        message = "i cannot help you with that request. sorry. "
+        message = "sorry. I can help you look for objects. maybe try again"
         return message
 
     @staticmethod
