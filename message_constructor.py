@@ -242,6 +242,7 @@ class MessageConstructor:
     @staticmethod
     def stop_search():
         message = "okay. if you need something else ask me again"
+        return message
 
     @staticmethod
     def delete_double_locations(br):
