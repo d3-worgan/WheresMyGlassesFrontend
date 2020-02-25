@@ -12,6 +12,7 @@ class BackendResponse:
     be processed.
     """
     def __init__(self, code_name, original_request, location_time, location_time_passed, locations_identified):
+        print("Building a response object")
         self.code_name = code_name
         self.original_request = original_request
         self.location_time = location_time
