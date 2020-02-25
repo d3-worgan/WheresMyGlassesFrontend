@@ -41,6 +41,8 @@ class InputHandler:
             self.handle_confirm_object(hermes, intent_message, session_id)
         elif intent_name == "code-pig:GiveObject":
             self.handle_give_object(hermes, intent_message, session_id)
+        elif intent_name == "code-pig:StopSearch":
+            self.handle_stop_search(hermes, session_id)
         else:
             self.handle_bad_intent(hermes, session_id)
 
@@ -79,9 +81,11 @@ class InputHandler:
         if not slot_value:
             self.handle_bad_intent(hermes, intent_message)
         elif slot_value == "yes":
-            self.send_frontend_request(hermes, intent_message, self.validate_object)
+            self.send_frontend_request(hermes, session_id, self.validate_object)
         elif slot_value == "no":
             self.handle_negative_confirmation(hermes, session_id)
+        else:
+            self.handle_stop_search(hermes, session_id)
         """Add handler for maybe's or escape commands"""
 
     def handle_give_object(self, hermes, intent_message, session_id):
