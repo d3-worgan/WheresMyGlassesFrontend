@@ -99,7 +99,7 @@ class InputHandler:
 
         if not slot_value:
             self.handle_bad_intent(hermes, intent_message)
-        elif slot_score < self.slot_threshold - 0.2:
+        elif slot_score < 0.6:
             self.handle_poor_object(hermes, session_id, slot_value)
         elif slot_value == "unknownword":
             self.handle_bad_object(hermes, session_id)
