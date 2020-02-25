@@ -34,7 +34,9 @@ class InputHandler:
 
         # Validate and handle incoming intents
         if intent_confidence < self.intent_threshold:
+            print("[InputHandler] Poor intent confidence")
             if intent_name == "code-pig:StopSearch":
+                print("[InputHandler] User wants to stop the search")
                 self.handle_stop_search(hermes, session_id)
             else:
                 self.handle_poor_intent(hermes, session_id)
