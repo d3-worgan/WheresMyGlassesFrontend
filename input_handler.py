@@ -21,6 +21,7 @@ class InputHandler:
         Process incoming messages from the backend
         """
         print("The session ended!")
+        print(message)
 
     def handle_user_input(self, hermes, intent_message):
         """
