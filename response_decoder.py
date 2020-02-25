@@ -85,10 +85,10 @@ if __name__ == "__main__":
 
     """Unit tests"""
 
-    rd = ResponseDecoder("192.168.0.27", "rd")
+    #rd = ResponseDecoder("192.168.0.27", "rd")
 
 
     #backend_response = "{\"code_name\": \"1\", \"original_request\": \"bottle\", \"location_time\": \"2020-02-24 19:36:40.357148\", \"minutes_passed\": \"0.63\", \"locations_identified\": [\"{\\\"object\": \\\"bottle\\\", \\\"location\\\": \\\"person\\\"}\\\"]}"
-    backend_response = "{\"code_name\": \"6\", \"original_request\": \"spectacles\", \"location_time\": \"None\", \"minutes_passed\": \"None\", \"locations_identified\": []}"
+    #backend_response = "{\"code_name\": \"6\", \"original_request\": \"spectacles\", \"location_time\": \"None\", \"minutes_passed\": \"None\", \"locations_identified\": []}"
 
-    rd.handle_backend_response(backend_response)
+    #rd.handle_backend_response(backend_response)
