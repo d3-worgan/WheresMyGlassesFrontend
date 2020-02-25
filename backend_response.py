@@ -21,8 +21,9 @@ class BackendResponse:
         if locations_identified:
             for loc in locations_identified:
                 x = json.loads(loc)
-                print("[BackendResponse} " + x)
-                lo = LocatedObject(x['camera_id'], x['object'], x['location'])
+                #print("[BackendResponse} " + x)
+                #lo = LocatedObject(x['camera_id'], x['object'], x['location'])
+                lo = LocatedObject(x['object'], x['location'])
                 self.locations_identified.append(lo)
         print("[BackendResponse] Response object built")
 

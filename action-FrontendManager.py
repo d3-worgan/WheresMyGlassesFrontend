@@ -16,7 +16,7 @@ intent_threshold = 0.7
 slot_threshold = 0.7
 
 # Describe which camera located the object
-cam_info = True
+cam_info = False
 
 if __name__ == "__main__":
 

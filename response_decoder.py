@@ -46,11 +46,15 @@ class ResponseDecoder:
         assert message['code_name'].isdigit(), "Response code should be integer"
         assert 0 < int(message['code_name']) <= 6, "Response code should be between 1 and 6"
         print("[ResponseDecoder] Loading response into response object")
-        backend_response = BackendResponse(message['code_name'],
-                                           message['original_request'],
-                                           message['location_time'],
-                                           message['minutes_passed'],
-                                           message['locations_identified'])
+        try:
+            backend_response = BackendResponse(message['code_name'],
+                                               message['original_request'],
+                                               message['location_time'],
+                                               message['minutes_passed'],
+                                               message['locations_identified'])
+        except (AttributeError, TypeError):
+            raise AssertionError("Backend response busted")
+
         assert backend_response is not None, "Failed to load BackendResponse object"
         print("[ResponseDecoder] Backend response loaded")
         backend_response.print()
@@ -84,10 +88,13 @@ if __name__ == "__main__":
 
     """Unit tests"""
 
-    #rd = ResponseDecoder("192.168.0.27", "rd")
+    # rd = ResponseDecoder("192.168.0.27", "rd", True)
 
 
     #backend_response = "{\"code_name\": \"1\", \"original_request\": \"bottle\", \"location_time\": \"2020-02-24 19:36:40.357148\", \"minutes_passed\": \"0.63\", \"locations_identified\": [\"{\\\"object\": \\\"bottle\\\", \\\"location\\\": \\\"person\\\"}\\\"]}"
     #backend_response = "{\"code_name\": \"6\", \"original_request\": \"spectacles\", \"location_time\": \"None\", \"minutes_passed\": \"None\", \"locations_identified\": []}"
 
-    #rd.handle_backend_response(backend_response)
+    # backend_response = {"code_name": "1", "original_request": "cup", "location_time": "2020-02-25 11:20:53.901430", "minutes_passed": "0.03", "locations_identified": ["{\"object\": \"cup\", \"location\": \"person\"}"]}
+#    assert backend_response is type(dict), "backend_response is not a dictionary (" + str(type(backend_response)) + ")"
+
+    # rd.handle_backend_response(json.dumps(backend_response))
