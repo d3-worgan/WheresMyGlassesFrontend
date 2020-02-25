@@ -45,14 +45,13 @@ class ResponseDecoder:
         assert message is not None, "backend response to json did not work?"
         assert message['code_name'].isdigit(), "Response code should be integer"
         assert 0 < int(message['code_name']) <= 6, "Response code should be between 1 and 6"
-        #assert datetime.datetime.strptime(message['location_time'], '%YYYY-%MM-%DD %HH-MM')
-        #assert message['minutes_passed'].replace('.', '', 1).isdigit() or None, "Minutes passed must be float or None"
         print("[ResponseDecoder] Loading response into response object")
         backend_response = BackendResponse(message['code_name'],
                                            message['original_request'],
                                            message['location_time'],
                                            message['minutes_passed'],
                                            message['locations_identified'])
+        assert backend_response is not None, "Failed to load BackendResponse object"
         print("[ResponseDecoder] Backend response loaded")
         backend_response.print()
 
