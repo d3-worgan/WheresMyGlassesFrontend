@@ -84,6 +84,8 @@ class InputHandler:
             self.send_frontend_request(hermes, session_id, self.validate_object)
         elif slot_value == "no":
             self.handle_negative_confirmation(hermes, session_id)
+        elif slot_value == "maybe":
+            self.send_frontend_request(hermes, session_id, self.validate_object)
         else:
             self.handle_stop_search(hermes, session_id)
         """Add handler for maybe's or escape commands"""
