@@ -23,6 +23,10 @@ class InputHandler:
         print("The session ended!")
         print(message)
 
+    def handle_not_recognised(self, hermes, message):
+        print("Not recognised!!!!")
+        print(message)
+
     def handle_user_input(self, hermes, intent_message):
         """
         Decodes and validates incoming intents
