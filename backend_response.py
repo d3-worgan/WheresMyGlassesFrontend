@@ -20,9 +20,10 @@ class BackendResponse:
         if locations_identified:
             for loc in locations_identified:
                 x = json.loads(loc)
-                print(x)
+                print("[BackendResponse} " + x)
                 lo = LocatedObject(x['camera_id'], x['object'], x['location'])
                 self.locations_identified.append(lo)
+        print("[BackendResponse] Response object built")
 
     def pack(self):
         """
