@@ -43,6 +43,8 @@ class InputHandler:
         print("[InputHandler] Termination type: " + str(dir(termination.termination_type)))
         print("[InputHandler] Termination type component: " + str(termination.termination_type.component))
         print("[InputHandler] Termination type c type: " + str(termination.termination_type.into_c_repr))
+        if "IntentNotRecognized" in str(termination.termination_type.into_c_repr):
+            print("[InputHandler] GOT YOU YOU BASTERD!")
         #print(message.termination)
 
     def handle_not_recognised(self, hermes, message):
