@@ -16,45 +16,6 @@ class InputHandler:
         self.slot_threshold = slot_threshold
         print("[InputHandler] Input handler loaded.")
 
-    def handle_session_started(self, hermes, message):
-        print("[InputHandler] A session started")
-        session_id = message.session_id
-        print("[InputHandler] Session ID: " + str(session_id))
-        #hermes.publish_end_session(session_id, "")
-        #hermes.publish_continue_session(session_id, "Hi, how can I help", [], send_intent_not_recognized=True)
-        # hermes.publish_end_session(session_id, "")
-        # hermes.publish_start_session_action("default", "Hi, how can i help", self.intents, True, True, None)
-
-    def handle_session_ended(self, hermes, message):
-        """
-        Process incoming messages from the backend
-        """
-        print("The session ended!")
-        session_id = message.session_id
-        print("[InputHandler] Session ID: " + str(session_id))
-        custom_data = message.custom_data
-        print("[InputHandler] Session ID: " + str(custom_data))
-        site_id = message.site_id
-        print("[InputHandler] Session ID: " + str(site_id))
-        termination = message.termination
-        print("[InputHandler] Termination message: " + str(dir(termination)))
-        print("[InputHandler] Termination data: " + str(termination.data))
-        print("[InputHandler] Termination crepr: " + str(termination.from_c_repr))
-        print("[InputHandler] Termination type: " + str(dir(termination.termination_type)))
-        print("[InputHandler] Termination type component: " + str(termination.termination_type.component))
-        print("[InputHandler] Termination type c type: " + str(termination.termination_type.into_c_repr))
-        if "IntentNotRecognized" in str(termination.termination_type.into_c_repr):
-            print("[InputHandler] GOT YOU YOU BASTERD!")
-            self.handle_not_recognised()
-        #print(message.termination)
-
-    def handle_not_recognised(self):
-        print("[Input Handler] Not recognised!!!!")
-        out_msg = MessageConstructor.bad_intent()
-        tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (out_msg)
-        print("[ResponseDecoder] Publishing message to TTS: ", out_msg)
-        self.connection.con.publish('hermes/tts/say', tts)
-
     def handle_user_input(self, hermes, intent_message):
         """
         Decodes and validates incoming intents
@@ -239,3 +200,35 @@ class InputHandler:
         sentence = MessageConstructor.stop_search()
         print("[InputHandler] " + sentence)
         hermes.publish_end_session(session_id, sentence)
+
+    def handle_session_started(self, hermes, message):
+        print("[InputHandler] A session started")
+        session_id = message.session_id
+        print("[InputHandler] Session ID: " + str(session_id))
+        #hermes.publish_end_session(session_id, "")
+        #hermes.publish_continue_session(session_id, "Hi, how can I help", [], send_intent_not_recognized=True)
+        # hermes.publish_end_session(session_id, "")
+        # hermes.publish_start_session_action("default", "Hi, how can i help", self.intents, True, True, None)
+
+    def handle_session_ended(self, hermes, message):
+        """
+        Process incoming messages from the backend
+        """
+        print("The session ended!")
+        session_id = message.session_id
+        print("[InputHandler] Session ID: " + str(session_id))
+        custom_data = message.custom_data
+        print("[InputHandler] Session ID: " + str(custom_data))
+        site_id = message.site_id
+        print("[InputHandler] Session ID: " + str(site_id))
+        termination = message.termination
+        if "IntentNotRecognized" in str(termination.termination_type.into_c_repr):
+            self.handle_not_recognised()
+        #print(message.termination)
+
+    def handle_not_recognised(self):
+        print("[Input Handler] Not recognised!!!!")
+        out_msg = "Did you want to look for something? maybe try again"
+        tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (out_msg)
+        print("[ResponseDecoder] Publishing message to TTS: ", out_msg)
+        self.connection.con.publish('hermes/tts/say', tts)
