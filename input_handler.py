@@ -37,7 +37,9 @@ class InputHandler:
         site_id = message.site_id
         print("[InputHandler] Session ID: " + str(site_id))
         termination = message.termination
-        print("[InputHandler] Session ID: " + str(dir(termination)))
+        print("[InputHandler] Termination message: " + str(dir(termination)))
+        print("[InputHandler] Termination data: " + str(termination.data))
+        print("[InputHandler] Termination type: " + str(termination.termination_type))
         #print(message.termination)
 
     def handle_not_recognised(self, hermes, message):
