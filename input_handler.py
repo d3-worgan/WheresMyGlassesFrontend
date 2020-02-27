@@ -16,8 +16,9 @@ class InputHandler:
         print("[InputHandler] Input handler loaded.")
 
     def handle_session_started(self, hermes, message):
-        print("A session started")
+        print("[InputHandler] A session started")
         session_id = message.session_id
+        print("[InputHandler] Session ID: " + str(session_id))
         hermes.publish_continue_session(session_id, "How can I help", [], send_intent_not_recognized=True)
 
     # def handle_session_ended(self, hermes, message):
