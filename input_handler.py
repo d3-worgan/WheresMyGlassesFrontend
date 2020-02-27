@@ -228,7 +228,7 @@ class InputHandler:
 
     def handle_not_recognised(self):
         print("[Input Handler] Not recognised!!!!")
-        out_msg = "Did you want to look for something? maybe try again"
+        out_msg = "did you want to look for something. maybe try again"
         tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (out_msg)
         print("[ResponseDecoder] Publishing message to TTS: ", out_msg)
         self.connection.con.publish('hermes/tts/say', tts)
