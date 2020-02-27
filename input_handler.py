@@ -10,17 +10,21 @@ class InputHandler:
 
     def __init__(self, broker, name, intent_threshold=0.7, slot_threshold=0.7):
         print("[InputHandler] Initialising user input handler")
-        self.connection = MQTTConnection(broker, name)
         self.intent_threshold = intent_threshold  # For checking confidence in user input
         self.slot_threshold = slot_threshold
         print("[InputHandler] Input handler loaded.")
+
+    def handle_session_started(self, hermes, message):
+        print("A session started")
+        session_id = message.session_id
+        hermes.publish_continue_session(session_id, message, [], send_intent_not_recognized=True)
 
     def handle_session_ended(self, hermes, message):
         """
         Process incoming messages from the backend
         """
         print("The session ended!")
-        print(message.termination)
+        #print(message.termination)
 
     def handle_not_recognised(self, hermes, message):
         print("Not recognised!!!!")

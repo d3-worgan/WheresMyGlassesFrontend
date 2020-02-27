@@ -31,6 +31,7 @@ if __name__ == "__main__":
         # Send incoming intents from Snips to the user input handler
         print("[FrontendManager] Connecting InputHandler to Snips.")
         h.subscribe_session_ended(input_handler.handle_session_ended) \
+         .subscribe_session_started(input_handler.handle_session_started) \
          .subscribe_intent_not_recognized(input_handler.handle_not_recognised) \
          .subscribe_intent("code-pig:LocateObject", input_handler.handle_user_input) \
          .subscribe_intent("code-pig:GiveAnswer", input_handler.handle_user_input) \
