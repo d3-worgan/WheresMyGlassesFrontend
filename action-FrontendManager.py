@@ -18,7 +18,11 @@ slot_threshold = 0.7
 # Describe which camera located the object
 cam_info = False
 
+
 if __name__ == "__main__":
+
+    # ResponseDecoder listens for processed information from the backend, sends output to snips TTS
+    response_decoder = ResponseDecoder(MQTT_IP_ADDR, "ResponseDecoder", cam_info)
 
     # Input handler communicates between Snips and BackendManager
     input_handler = InputHandler(MQTT_IP_ADDR, "InputHandler", intent_threshold, slot_threshold)
@@ -39,6 +43,3 @@ if __name__ == "__main__":
          .subscribe_intent("code-pig:BookTickets", input_handler.handle_user_input) \
          .start()
         print("[FrontendManager] InputHandler subscribed to Snips.")
-
-    # ResponseDecoder listens for processed information from the backend, sends output to snips TTS
-    response_decoder = ResponseDecoder(MQTT_IP_ADDR, "ResponseDecoder", cam_info)
