@@ -28,8 +28,7 @@ class InputHandler:
     #     #print(message.termination)
 
     def handle_not_recognised(self, hermes, message):
-        print("Not recognised!!!!")
-        print(message)
+        print("[Input Handler] Not recognised!!!!")
 
     def handle_user_input(self, hermes, intent_message):
         """
@@ -186,13 +185,13 @@ class InputHandler:
     def handle_no_object(self, hermes, session_id):
         """When the user did not specify an object or the system did not hear it"""
         sentence = MessageConstructor.no_object()
-        hermes.publish_continue_session(session_id, sentence, ["code-pig:GiveObject", "code-pig:StopSearch", "code-pig:InformObject", "code-pig:SetVolume", "code-pig:BookTickets", "code-pig:SetLights", "code-pig:TellJoke"])
+        hermes.publish_continue_session(session_id, sentence, ["code-pig:GiveObject", "code-pig:StopSearch", "code-pig:InformObject", "code-pig:SetVolume", "code-pig:BookTickets", "code-pig:SetLights", "code-pig:TellJoke"], send_intent_not_recognized=True)
 
     def handle_poor_object(self, hermes, session_id, object_name):
         """When the system is not sure it heard the object correctly"""
         sentence = MessageConstructor.poor_object(object_name)
         self.validate_object = object_name
-        hermes.publish_continue_session(session_id, sentence, ["code-pig:GiveObject", "code-pig:StopSearch", "code-pig:InformObject", "code-pig:SetVolume", "code-pig:BookTickets", "code-pig:SetLights", "code-pig:TellJoke"])
+        hermes.publish_continue_session(session_id, sentence, ["code-pig:GiveObject", "code-pig:StopSearch", "code-pig:InformObject", "code-pig:SetVolume", "code-pig:BookTickets", "code-pig:SetLights", "code-pig:TellJoke"], send_intent_not_recognized=True)
 
     def handle_bad_object(self, hermes, session_id):
         """When the user is specifying an object that system doesnt recognise"""
@@ -202,7 +201,7 @@ class InputHandler:
     def handle_negative_confirmation(self, hermes, session_id):
         """When the user informs the system that wasnt the object they wanted to search for"""
         sentence = MessageConstructor.what_object()
-        hermes.publish_continue_session(session_id, sentence, ["code-pig:GiveObject", "code-pig:StopSearch", "code-pig:InformObject", "code-pig:SetVolume", "code-pig:BookTickets", "code-pig:SetLights", "code-pig:TellJoke"])
+        hermes.publish_continue_session(session_id, sentence, ["code-pig:GiveObject", "code-pig:StopSearch", "code-pig:InformObject", "code-pig:SetVolume", "code-pig:BookTickets", "code-pig:SetLights", "code-pig:TellJoke"], send_intent_not_recognized=True)
 
     def handle_positive_confirmation(self, hermes, session_id, object_name):
         """The user confirms the system heard their request properly"""
