@@ -10,6 +10,7 @@ class InputHandler:
 
     def __init__(self, broker, name, intent_threshold=0.7, slot_threshold=0.7):
         print("[InputHandler] Initialising user input handler")
+        self.connection = MQTTConnection(broker, "InputHandler")
         self.intent_threshold = intent_threshold  # For checking confidence in user input
         self.slot_threshold = slot_threshold
         print("[InputHandler] Input handler loaded.")
