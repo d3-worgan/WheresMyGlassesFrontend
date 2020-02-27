@@ -42,7 +42,7 @@ class InputHandler:
         print("[InputHandler] Termination crepr: " + str(termination.from_c_repr))
         print("[InputHandler] Termination type: " + str(dir(termination.termination_type)))
         print("[InputHandler] Termination type component: " + str(termination.termination_type.component))
-        print("[InputHandler] Termination type c type: " + str(dir(termination.termination_type.into_c_repr)))
+        print("[InputHandler] Termination type c type: " + str(termination.termination_type.into_c_repr))
         #print(message.termination)
 
     def handle_not_recognised(self, hermes, message):
