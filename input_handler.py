@@ -35,9 +35,9 @@ class InputHandler:
         custom_data = message.custom_data
         print("[InputHandler] Session ID: " + str(custom_data))
         site_id = message.site_id
-        print("[InputHandler] Session ID: " + str(session_id))
+        print("[InputHandler] Session ID: " + str(site_id))
         termination = message.termination
-        print("[InputHandler] Session ID: " + str(termination))
+        print("[InputHandler] Session ID: " + str(dir(termination)))
         #print(message.termination)
 
     def handle_not_recognised(self, hermes, message):
