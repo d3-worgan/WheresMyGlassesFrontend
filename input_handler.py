@@ -40,6 +40,7 @@ class InputHandler:
         print("[InputHandler] Termination message: " + str(dir(termination)))
         print("[InputHandler] Termination data: " + str(termination.data))
         print("[InputHandler] Termination type: " + str(dir(termination.termination_type)))
+        print("[InputHandler] Termination type: " + str(termination.termination_type.component))
         #print(message.termination)
 
     def handle_not_recognised(self, hermes, message):
