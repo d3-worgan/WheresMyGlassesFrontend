@@ -20,7 +20,7 @@ class InputHandler:
         session_id = message.session_id
         print("[InputHandler] Session ID: " + str(session_id))
         hermes.publish_end_session(session_id, "")
-        hermes.publish_start_session_action("default", "Hi, how can i help", [], False, True, None)
+        hermes.publish_start_session_action("default", "Hi, how can i help", [], True, True, None)
 
     # def handle_session_ended(self, hermes, message):
     #     """
