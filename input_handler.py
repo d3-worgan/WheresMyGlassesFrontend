@@ -45,10 +45,15 @@ class InputHandler:
         print("[InputHandler] Termination type c type: " + str(termination.termination_type.into_c_repr))
         if "IntentNotRecognized" in str(termination.termination_type.into_c_repr):
             print("[InputHandler] GOT YOU YOU BASTERD!")
+            self.handle_not_recognised()
         #print(message.termination)
 
-    def handle_not_recognised(self, hermes, message):
+    def handle_not_recognised(self):
         print("[Input Handler] Not recognised!!!!")
+        out_msg = MessageConstructor.bad_intent()
+        tts = "{\"siteId\": \"default\", \"text\": \"%s\", \"lang\": \"en-GB\"}" % (out_msg)
+        print("[ResponseDecoder] Publishing message to TTS: ", out_msg)
+        self.connection.con.publish('hermes/tts/say', tts)
 
     def handle_user_input(self, hermes, intent_message):
         """
