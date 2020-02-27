@@ -2,7 +2,6 @@ from backend_response import BackendResponse
 import json
 from connection import MQTTConnection
 from message_constructor import MessageConstructor
-from datetime import datetime
 
 
 class ResponseDecoder:
@@ -53,7 +52,7 @@ class ResponseDecoder:
                                                message['minutes_passed'],
                                                message['locations_identified'])
         except (AttributeError, TypeError):
-            raise AssertionError("Backend response busted")
+            raise AssertionError("Something happened when unpacking the backend response")
 
         assert backend_response is not None, "Failed to load BackendResponse object"
         print("[ResponseDecoder] Backend response loaded")
