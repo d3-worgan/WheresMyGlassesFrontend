@@ -34,8 +34,8 @@ if __name__ == "__main__":
     with Hermes(MQTT_ADDR) as h:
         # Send incoming intents from Snips to the user input handler
         print("[FrontendManager] Connecting InputHandler to Snips.")
-        # h.subscribe_session_ended(input_handler.handle_session_ended) \
-        h.subscribe_session_started(input_handler.handle_session_started) \
+        h.subscribe_session_ended(input_handler.handle_session_ended) \
+         .subscribe_session_started(input_handler.handle_session_started) \
          .subscribe_intent_not_recognized(input_handler.handle_not_recognised) \
          .subscribe_intent(intents[0], input_handler.handle_user_input) \
          .subscribe_intent(intents[1], input_handler.handle_user_input) \
