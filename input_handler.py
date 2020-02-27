@@ -21,16 +21,24 @@ class InputHandler:
         session_id = message.session_id
         print("[InputHandler] Session ID: " + str(session_id))
         #hermes.publish_end_session(session_id, "")
-        hermes.publish_continue_session(session_id, "Hi, how can I help", [], send_intent_not_recognized=True)
+        #hermes.publish_continue_session(session_id, "Hi, how can I help", [], send_intent_not_recognized=True)
         # hermes.publish_end_session(session_id, "")
         # hermes.publish_start_session_action("default", "Hi, how can i help", self.intents, True, True, None)
 
-    # def handle_session_ended(self, hermes, message):
-    #     """
-    #     Process incoming messages from the backend
-    #     """
-    #     print("The session ended!")
-    #     #print(message.termination)
+    def handle_session_ended(self, hermes, message):
+        """
+        Process incoming messages from the backend
+        """
+        print("The session ended!")
+        session_id = message.session_id
+        print("[InputHandler] Session ID: " + str(session_id))
+        custom_data = message.custom_data
+        print("[InputHandler] Session ID: " + str(custom_data))
+        site_id = message.site_id
+        print("[InputHandler] Session ID: " + str(session_id))
+        termination = message.termination
+        print("[InputHandler] Session ID: " + str(termination))
+        #print(message.termination)
 
     def handle_not_recognised(self, hermes, message):
         print("[Input Handler] Not recognised!!!!")
