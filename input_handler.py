@@ -23,7 +23,6 @@ class InputHandler:
         :param intent_message:
         :return:
         """
-
         # Extract intent information
         session_id = intent_message.session_id
         intent_name = intent_message.intent.intent_name
@@ -33,7 +32,7 @@ class InputHandler:
         print("[InputHandler] Intent name " + intent_name)
         print("[InputHandler] intent confidence " + str(intent_confidence))
 
-        # Validate and handle incoming intents
+        # Validate and direct incoming intents
         if intent_confidence < self.intent_threshold:
             print("[InputHandler] Poor intent confidence")
             if intent_name == "code-pig:StopSearch":
