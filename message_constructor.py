@@ -18,8 +18,11 @@ class MessageConstructor:
         """
         message = ""
 
+        if br.locations_identified[0].object == "Glasses" and br.locations_identified[0].location == "Human head":
+            message += "I can see your glasses. they are on your head!"
+
         # Produce a message describing the location of an object using the camera_id info
-        if cam:
+        elif cam:
             if br.original_request[-1] == "s":
                 message += "I just seen some %s by a %s in camera %s" % (br.locations_identified[0].object,
                                                                          br.locations_identified[0].location,
@@ -89,7 +92,9 @@ class MessageConstructor:
         """
         print("Single location previous snapshot")
         message = ""
-        if cam:
+        if br.locations_identified[0].object == "Glasses" and br.locations_identified[0].location == "Human head":
+            message += "I seen your glasses. they were on your head!"
+        elif cam:
             if br.original_request[-1] == "s":
                 message += "I seen some %s by a %s in camera %s. " % (br.locations_identified[0].object,
                                                                      br.locations_identified[0].location,
