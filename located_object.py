@@ -10,9 +10,10 @@ class LocatedObject:
     #     self.object = object
     #     self.location = location
 
-    def __init__(self, object, location):
+    def __init__(self, object, location, camera_id='x'):
         self.object = object
         self.location = location
+        self.camera_id = camera_id
 
     def to_json(self):
         data = {}

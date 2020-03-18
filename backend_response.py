@@ -11,7 +11,7 @@ class BackendResponse:
     can then unpack the recieved message back into a BackendResponse object so that it can
     be processed.
     """
-    def __init__(self, code_name, original_request, location_time, location_time_passed, locations_identified):
+    def __init__(self, code_name, original_request, location_time, location_time_passed, locations_identified, cam_info):
         print("[BackendResponse] Building a response object")
         self.code_name = code_name
         self.original_request = original_request
@@ -22,8 +22,10 @@ class BackendResponse:
             for loc in locations_identified:
                 x = json.loads(loc)
                 #print("[BackendResponse} " + x)
-                #lo = LocatedObject(x['camera_id'], x['object'], x['location'])
-                lo = LocatedObject(x['object'], x['location'])
+                if cam_info:
+                    lo = LocatedObject(x['object'], x['location'], x['camera_id'])
+                else:
+                    lo = LocatedObject(x['object'], x['location'])
                 self.locations_identified.append(lo)
         print("[BackendResponse] Response object built")
 

@@ -50,7 +50,8 @@ class ResponseDecoder:
                                                message['original_request'],
                                                message['location_time'],
                                                message['minutes_passed'],
-                                               message['locations_identified'])
+                                               message['locations_identified'],
+                                               self.cam_info)
         except (AttributeError, TypeError):
             raise AssertionError("Something happened when unpacking the backend response")
 
