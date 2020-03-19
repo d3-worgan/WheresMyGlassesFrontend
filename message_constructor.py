@@ -24,11 +24,11 @@ class MessageConstructor:
         # Produce a message describing the location of an object using the camera_id info
         elif cam:
             if br.original_request[-1] == "s":
-                message += "I just seen some %s by a %s in camera %s" % (br.locations_identified[0].object,
+                message += "I just seen some %s by a %s in the %s" % (br.locations_identified[0].object,
                                                                          br.locations_identified[0].location,
                                                                          br.locations_identified[0].camera_id)
             else:
-                message += "I just seen a %s by a %s in camera %s" % (br.locations_identified[0].object,
+                message += "I just seen a %s by a %s in the %s" % (br.locations_identified[0].object,
                                                                       br.locations_identified[0].location,
                                                                       br.locations_identified[0].camera_id)
         # Dont include camera id info
@@ -53,7 +53,7 @@ class MessageConstructor:
 
         if cam:
             if br.original_request[-1] == "s":
-                message += "I can see some %s in %s locations. There is one by a %s from camera %s" % (br.locations_identified[0].object,
+                message += "I can see some %s in %s locations. There is one by a %s in the %s" % (br.locations_identified[0].object,
                                                                                                        str(len(br.locations_identified)),
                                                                                                        br.locations_identified[0].location,
                                                                                                        br.locations_identified[0].camera_id)
@@ -96,11 +96,11 @@ class MessageConstructor:
             message += "I seen your glasses. they were on your head!"
         elif cam:
             if br.original_request[-1] == "s":
-                message += "I seen some %s by a %s in camera %s. " % (br.locations_identified[0].object,
+                message += "I seen some %s by a %s in the %s. " % (br.locations_identified[0].object,
                                                                      br.locations_identified[0].location,
                                                                      br.locations_identified[0].camera_id)
             else:
-                message += "I seen a %s by a %s in camera %s. " % (br.locations_identified[0].object,
+                message += "I seen a %s by a %s in the %s. " % (br.locations_identified[0].object,
                                                                   br.locations_identified[0].location,
                                                                   br.locations_identified[0].camera_id)
 
@@ -133,12 +133,12 @@ class MessageConstructor:
 
         if cam:
             if br.original_request[-1] == "s":
-                message = "I seen some %s in %s locations. There was some by a %s in camera %s. " % (br.locations_identified[0].object,
+                message = "I seen some %s in %s locations. There was some by a %s in the %s. " % (br.locations_identified[0].object,
                                                                                                    str(len(br.locations_identified)),
                                                                                                    br.locations_identified[0].location,
                                                                                                    br.locations_identified[0].camera_id)
                 for location in br.locations_identified[1:]:
-                    message += "and some more by a %s in camera %s. " % (location.location, location.camera_id)
+                    message += "and some more by a %s in the %s. " % (location.location, location.camera_id)
             else:
                 message = "I seen a %s in %s locations. There was one by a %s. " % (
                 br.locations_identified[0].object, str(len(br.locations_identified)),
