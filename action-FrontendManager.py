@@ -7,7 +7,7 @@ from response_decoder import ResponseDecoder
 
 """Start point for frontend. Subscribe to input from snips and responses from backend."""
 
-MQTT_IP_ADDR = "192.168.0.159"
+MQTT_IP_ADDR = "192.168.0.27"
 MQTT_PORT = 1883
 MQTT_ADDR = "{}:{}".format(MQTT_IP_ADDR, str(MQTT_PORT))
 
