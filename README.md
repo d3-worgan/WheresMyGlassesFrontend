@@ -1,20 +1,9 @@
-<<<<<<< HEAD
-
-=======
 # Wheres My Glasses (Frontend)
-Virtual assistant for object location around the smart home and people with dementia.
+Action code for a voice assistant that handles requests relating to locating objects around the smart home.
+Originally designed to run on raspberry pi and work with
+the [associated backend system](https://github.com/d3-worgan/WheresMyGlassesBackend) to form a smart home object location assistant.
 
-Uses the Snips voice platform for speech processing (ASR/STT, NLU, TTS).
+![location demo](frontend_crop.png)  
 
-https://snips.ai/
-
-The "LocateObject" intent triggers a search for an object by sending a request to the Wheres My Glasses backend. Backend responds with potential location data of the requested object using object detection.
-
-https://github.com/d3-worgan/WheresMyGlassesBackend
-
-E.g.
-
-"Hey Snips... Where's my glasses?"
-
-"I can see your glasses, they're on your head!"
->>>>>>> 87aaa71ea2a39d975e91611f2b868d416c9a0f69
+Unfortunately the voice platform Snips is no longer supported and so adjustment is needed for the project
+to work with something like Rhasspy (open source) or some other assistant like google or alexa.
