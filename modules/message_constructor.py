@@ -1,6 +1,3 @@
-from backend_response import BackendResponse
-
-
 class MessageConstructor:
     """
     Class containing a number of output messages that can be sent to the text to speech engine.

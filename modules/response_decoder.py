@@ -1,7 +1,7 @@
-from backend_response import BackendResponse
+from modules.backend_response import BackendResponse
 import json
-from connection import MQTTConnection
-from message_constructor import MessageConstructor
+from modules.connection import MQTTConnection
+from modules.message_constructor import MessageConstructor
 
 
 class ResponseDecoder:

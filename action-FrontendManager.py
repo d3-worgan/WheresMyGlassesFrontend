@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from hermes_python.hermes import Hermes
-from input_handler import InputHandler
-from response_decoder import ResponseDecoder
+from modules.input_handler import InputHandler
+from modules.response_decoder import ResponseDecoder
 
 """Start point for frontend. Subscribe to input from snips and responses from backend."""
 

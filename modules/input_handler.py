@@ -1,5 +1,5 @@
-from message_constructor import MessageConstructor
-from connection import MQTTConnection
+from modules.message_constructor import MessageConstructor
+from modules.connection import MQTTConnection
 
 
 class InputHandler:
